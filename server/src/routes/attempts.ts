@@ -109,6 +109,114 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/attempts/stats — aggregate profile stats for the current user
+// IMPORTANT: must be declared before /:id to avoid Express treating 'stats' as an ID
+router.get('/stats', async (req: Request, res: Response) => {
+  const session = await getSession(req);
+  if (!session) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const attempts = await prisma.attempt.findMany({
+      where: { learnerId: session.user.id },
+      include: {
+        problem: { select: { id: true, title: true, difficulty: true } },
+        evaluation: true,
+        hintUsages: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const completed = attempts.filter((a) => a.status === 'COMPLETED');
+
+    // Difficulty breakdown for completed attempts
+    const byDifficulty = { EASY: 0, MEDIUM: 0, HARD: 0 };
+    completed.forEach((a) => {
+      byDifficulty[a.problem.difficulty as keyof typeof byDifficulty]++;
+    });
+
+    // Total problems available by difficulty
+    const problemCounts = await prisma.problem.groupBy({
+      by: ['difficulty'],
+      _count: { id: true },
+    });
+    const totalByDifficulty = { EASY: 0, MEDIUM: 0, HARD: 0 };
+    problemCounts.forEach((p) => {
+      totalByDifficulty[p.difficulty as keyof typeof totalByDifficulty] = p._count.id;
+    });
+
+    // Average score % across all completed evaluated attempts
+    let averageScore = 0;
+    const scoredAttempts = completed.filter((a) => a.evaluation);
+    if (scoredAttempts.length > 0) {
+      const scores = scoredAttempts.map((a) => {
+        const results = a.evaluation!.results as any[];
+        const total = results.reduce(
+          (sum, r) => sum + r.feedback.reduce((s: number, f: any) => s + (f.score || 0), 0),
+          0
+        );
+        const max = results.reduce((sum, r) => sum + r.feedback.length * 5, 0);
+        return max > 0 ? (total / max) * 100 : 0;
+      });
+      averageScore = Math.round(scores.reduce((s, n) => s + n, 0) / scores.length);
+    }
+
+    // Total hints used
+    const totalHintsUsed = attempts.reduce((sum, a) => sum + a.hintUsages.length, 0);
+
+    // Heatmap — last 365 days, count of attempts per calendar day
+    const yearAgo = new Date();
+    yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+    const dateMap = new Map<string, number>();
+    attempts.forEach((a) => {
+      if (a.createdAt >= yearAgo) {
+        const key = a.createdAt.toISOString().split('T')[0];
+        dateMap.set(key, (dateMap.get(key) || 0) + 1);
+      }
+    });
+    const heatmap = Array.from(dateMap.entries()).map(([date, count]) => ({ date, count }));
+
+    // Recent 5 attempts
+    const recentAttempts = attempts.slice(0, 5).map((a) => {
+      let score: number | null = null;
+      if (a.evaluation) {
+        const results = a.evaluation.results as any[];
+        const total = results.reduce(
+          (sum, r) => sum + r.feedback.reduce((s: number, f: any) => s + (f.score || 0), 0),
+          0
+        );
+        const max = results.reduce((sum, r) => sum + r.feedback.length * 5, 0);
+        score = max > 0 ? Math.round((total / max) * 100) : 0;
+      }
+      return {
+        id: a.id,
+        problemId: a.problem.id,
+        problemTitle: a.problem.title,
+        difficulty: a.problem.difficulty,
+        score,
+        status: a.status,
+        createdAt: a.createdAt.toISOString(),
+      };
+    });
+
+    res.json({
+      totalAttempts: attempts.length,
+      completed: completed.length,
+      byDifficulty,
+      totalByDifficulty,
+      averageScore,
+      totalHintsUsed,
+      heatmap,
+      recentAttempts,
+    });
+  } catch (err) {
+    console.error('[GET /api/attempts/stats]', err);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
 // GET /api/attempts/:id — get attempt with stages + evaluation
 router.get('/:id', async (req: Request, res: Response) => {
   const session = await getSession(req);
@@ -371,6 +479,7 @@ router.post('/:id/submit', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Evaluation failed. Please try again.', detail: err.message });
   }
 });
+
 
 // POST /api/attempts/:id/hints — unlock a hint
 router.post('/:id/hints', async (req: Request, res: Response) => {

@@ -10,6 +10,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css'; // Dark theme for prism
 import { startAttempt } from '../../actions';
 import { HintPanel } from './HintPanel';
+import { ScoreCard } from './ScoreCard';
 
 const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
 const AUTO_SAVE_INTERVAL = 30_000;
@@ -35,6 +36,9 @@ interface Problem {
   constraints: string[];
   testCases?: string[];
   extensibilityHooks?: string[];
+  hints?: string[];
+  totalHints?: number;
+  sampleSolution?: string;
 }
 
 const STAGES = ['REQUIREMENTS', 'DESIGN', 'EXTENSION'] as const;
@@ -185,7 +189,8 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
   const [attemptStatus, setAttemptStatus] = useState<string>('DRAFT');
   const [sidebarWidth, setSidebarWidth] = useState(500); // Resizable sidebar width
   const [isPending, startTransition] = useTransition();
-  const [resultTab, setResultTab] = useState<'evaluation' | 'submission'>('evaluation');
+  const [resultTab, setResultTab] = useState<'evaluation' | 'scorecard' | 'solution' | 'submission'>('scorecard');
+  const [sampleSolution, setSampleSolution] = useState<string | null>(null);
 
   const contentsRef = useRef(contents);
   contentsRef.current = contents;
@@ -205,6 +210,9 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
         setAttemptStatus(data.attempt.status);
         if (data.attempt.evaluation) {
           setEvaluation(data.attempt.evaluation.results);
+        }
+        if (data.attempt.problem?.sampleSolution) {
+          setSampleSolution(data.attempt.problem.sampleSolution);
         }
       })
       .catch(console.error)
@@ -279,6 +287,13 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
       } else {
         setEvaluation(data.evaluation.results);
         setAttemptStatus('COMPLETED');
+        setResultTab('scorecard');
+        // Re-fetch to get sampleSolution now that status is COMPLETED
+        const fresh = await fetch(`${SERVER}/api/attempts/${attemptId}`, { credentials: 'include' });
+        const freshData = await fresh.json();
+        if (freshData.attempt?.problem?.sampleSolution) {
+          setSampleSolution(freshData.attempt.problem.sampleSolution);
+        }
       }
     } catch (err) {
       alert('An unexpected error occurred during submission.');
@@ -540,11 +555,25 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
           {evaluation && (
             <div className="flex items-center gap-8 border-b border-white/10 px-8 pt-6 shrink-0 bg-[#0a0a0a]">
               <button 
+                onClick={() => setResultTab('scorecard')}
+                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${resultTab === 'scorecard' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+              >
+                Score Overview
+              </button>
+              <button 
                 onClick={() => setResultTab('evaluation')}
                 className={`pb-3 text-sm font-medium border-b-2 transition-colors ${resultTab === 'evaluation' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
               >
-                Evaluation Results
+                Full Breakdown
               </button>
+              {sampleSolution && (
+                <button 
+                  onClick={() => setResultTab('solution')}
+                  className={`pb-3 text-sm font-medium border-b-2 transition-colors ${resultTab === 'solution' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+                >
+                  Sample Solution
+                </button>
+              )}
               <button 
                 onClick={() => setResultTab('submission')}
                 className={`pb-3 text-sm font-medium border-b-2 transition-colors ${resultTab === 'submission' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
@@ -554,7 +583,19 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
             </div>
           )}
 
-          {evaluation && resultTab === 'evaluation' ? (
+          {evaluation && resultTab === 'scorecard' ? (
+            <ScoreCard evaluation={evaluation} />
+          ) : evaluation && resultTab === 'solution' && sampleSolution ? (
+            <div className="flex-1 overflow-y-auto p-8">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
+                  <h2 className="text-xl font-bold text-white">Sample Solution</h2>
+                  <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-xs font-bold uppercase tracking-wider font-mono">Reference</span>
+                </div>
+                <pre className="font-mono text-sm text-white/80 leading-relaxed whitespace-pre-wrap bg-white/[0.03] border border-white/10 rounded-xl p-6">{sampleSolution}</pre>
+              </div>
+            </div>
+          ) : evaluation && resultTab === 'evaluation' ? (
             // Evaluation Results View
             <div className="flex-1 overflow-y-auto p-8">
               <div className="max-w-3xl mx-auto space-y-8">

@@ -28,7 +28,7 @@ export function Navbar() {
       
       {/* Navigation pill */}
       <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
-        <Link href="/problems" className="px-5 py-2 text-white bg-white/10 transition-colors">
+        <Link href="/problems" className="px-5 py-2 hover:text-white transition-colors">
           Platform
         </Link>
         {!isPending && !session && (
@@ -42,11 +42,17 @@ export function Navbar() {
           </>
         )}
         {!isPending && session && (
-          <button onClick={handleSignOut} className="px-5 py-2 hover:text-white transition-colors">
-            Sign out
-          </button>
+          <>
+            <Link href="/profile" className="px-5 py-2 hover:text-white transition-colors">
+              Profile
+            </Link>
+            <button onClick={handleSignOut} className="px-5 py-2 hover:text-white transition-colors">
+              Sign out
+            </button>
+          </>
         )}
       </nav>
+
     </header>
   );
 }
