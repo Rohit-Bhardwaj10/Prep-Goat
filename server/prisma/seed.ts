@@ -9,6 +9,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding problems...");
+  await prisma.problem.deleteMany({});
   
   await prisma.problem.createMany({
     data: [
