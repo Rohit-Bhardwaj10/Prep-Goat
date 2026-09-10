@@ -23,6 +23,7 @@ export const prisma = basePrisma.$extends({
             const isConnectionError = 
               error.code === 'P1001' || 
               error.code === 'P2024' ||
+              error.code === 'P1017' ||
               error.message?.toLowerCase().includes('socket') || 
               error.message?.toLowerCase().includes('connect') ||
               error.message?.toLowerCase().includes('terminate') ||

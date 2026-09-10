@@ -124,6 +124,8 @@ router.get('/:id', async (req: Request, res: Response) => {
       include: {
         stages: { orderBy: { stageType: 'asc' } },
         evaluation: true,
+        problem: true,
+        hintUsages: true,
       },
     });
 
@@ -138,7 +140,20 @@ router.get('/:id', async (req: Request, res: Response) => {
       return;
     }
 
-    res.json({ attempt });
+    // Filter problem data to not leak hints/solution
+    const allHints = (attempt.problem.hints as string[]) || [];
+    const totalHints = allHints.length;
+    const unlockedHintIndices = attempt.hintUsages.map((h) => h.hintIndex);
+    const unlockedHints = allHints.filter((_, i) => unlockedHintIndices.includes(i));
+    
+    const problemSafe = {
+      ...attempt.problem,
+      hints: unlockedHints,
+      totalHints,
+      sampleSolution: attempt.status === 'COMPLETED' ? attempt.problem.sampleSolution : undefined,
+    };
+
+    res.json({ attempt: { ...attempt, problem: problemSafe } });
   } catch (err) {
     console.error(`[GET /api/attempts/${id}]`, err);
     res.status(500).json({ error: 'Failed to fetch attempt' });
@@ -354,6 +369,67 @@ router.post('/:id/submit', async (req: Request, res: Response) => {
       console.error('Failed to mark attempt as FAILED', e);
     }
     res.status(500).json({ error: 'Evaluation failed. Please try again.', detail: err.message });
+  }
+});
+
+// POST /api/attempts/:id/hints — unlock a hint
+router.post('/:id/hints', async (req: Request, res: Response) => {
+  const session = await getSession(req);
+  if (!session) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  const { id } = req.params;
+  const { hintIndex } = req.body;
+  
+  if (typeof hintIndex !== 'number') {
+    res.status(400).json({ error: 'hintIndex must be a number' });
+    return;
+  }
+
+  try {
+    const attempt = await prisma.attempt.findUnique({ 
+      where: { id }, 
+      include: { problem: true } 
+    });
+    
+    if (!attempt) {
+      res.status(404).json({ error: 'Attempt not found' });
+      return;
+    }
+    if (attempt.learnerId !== session.user.id) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+    
+    if (attempt.status !== 'DRAFT' && attempt.status !== 'FAILED') {
+      res.status(409).json({ error: `Cannot unlock hints in status ${attempt.status}` });
+      return;
+    }
+
+    const hints = (attempt.problem.hints as string[]) || [];
+    if (hintIndex < 0 || hintIndex >= hints.length) {
+      res.status(400).json({ error: 'Invalid hint index' });
+      return;
+    }
+
+    // Record usage (ignore if already exists)
+    try {
+      await prisma.hintUsage.create({
+        data: { attemptId: id, hintIndex }
+      });
+    } catch (e: any) {
+      // Prisma code P2002 is unique constraint failed
+      if (e.code !== 'P2002') {
+        throw e;
+      }
+    }
+
+    res.json({ hint: hints[hintIndex] });
+  } catch (err) {
+    console.error(`[POST /api/attempts/${id}/hints]`, err);
+    res.status(500).json({ error: 'Failed to unlock hint' });
   }
 });
 

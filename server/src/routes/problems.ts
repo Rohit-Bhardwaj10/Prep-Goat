@@ -33,6 +33,19 @@ router.get('/:id', async (req: Request, res: Response) => {
   try {
     const problem = await prisma.problem.findUnique({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        type: true,
+        difficulty: true,
+        tags: true,
+        requirements: true,
+        constraints: true,
+        testCases: true,
+        extensibilityHooks: true,
+        createdAt: true,
+      },
     });
     if (!problem) {
       res.status(404).json({ error: 'Problem not found' });

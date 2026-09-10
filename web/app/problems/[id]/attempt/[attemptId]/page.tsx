@@ -10,19 +10,7 @@ interface Problem {
   constraints: string[];
 }
 
-async function getProblem(problemId: string): Promise<Problem | null> {
-  try {
-    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
-    const res = await fetch(`${SERVER_URL}/api/problems/${problemId}`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.problem ?? null;
-  } catch {
-    return null;
-  }
-}
+// Problem fetching is now done within the attempt endpoint to avoid leaking private fields
 
 async function getAttempt(attemptId: string) {
   try {
@@ -51,18 +39,18 @@ export default async function AttemptEditorPage({
 }) {
   const { id: problemId, attemptId } = await params;
 
-  const [data, problem] = await Promise.all([
-    getAttempt(attemptId),
-    getProblem(problemId),
-  ]);
+  const data = await getAttempt(attemptId);
 
-  if (!data || !problem) notFound();
+  if (!data || !data.attempt) notFound();
+  
+  // Ensure the problem ID matches (just a sanity check)
+  if (data.attempt.problem.id !== problemId) notFound();
 
   return (
     <Editor
       attemptId={attemptId}
       problemId={problemId}
-      problem={problem}
+      problem={data.attempt.problem}
     />
   );
 }

@@ -9,6 +9,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css'; // Dark theme for prism
 import { startAttempt } from '../../actions';
+import { HintPanel } from './HintPanel';
 
 const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
 const AUTO_SAVE_INTERVAL = 30_000;
@@ -515,6 +516,13 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
                 </ul>
               </div>
             )}
+
+            <HintPanel 
+              attemptId={attemptId}
+              totalHints={problem.totalHints || 0}
+              initialUnlockedHints={problem.hints || []}
+              status={attemptStatus}
+            />
           </div>
         </aside>
 
