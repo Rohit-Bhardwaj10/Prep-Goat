@@ -32,6 +32,8 @@ interface Problem {
   description: string;
   requirements: string[];
   constraints: string[];
+  testCases?: string[];
+  extensibilityHooks?: string[];
 }
 
 const STAGES = ['REQUIREMENTS', 'DESIGN', 'EXTENSION'] as const;
@@ -180,7 +182,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
   const [submitting, setSubmitting] = useState(false);
   const [evaluation, setEvaluation] = useState<any>(null);
   const [attemptStatus, setAttemptStatus] = useState<string>('DRAFT');
-  const [sidebarWidth, setSidebarWidth] = useState(340); // Resizable sidebar width
+  const [sidebarWidth, setSidebarWidth] = useState(500); // Resizable sidebar width
   const [isPending, startTransition] = useTransition();
   const [resultTab, setResultTab] = useState<'evaluation' | 'submission'>('evaluation');
 
@@ -401,7 +403,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
         <aside style={{ width: sidebarWidth }} className="shrink-0 flex flex-col overflow-hidden relative border-r border-white/10 bg-[#0a0a0a]">
           
           {/* Top minimal navigation */}
-          <div className="flex items-center justify-center gap-4 py-4 border-b border-white/10 shrink-0 bg-white/5">
+          <div className="flex items-center justify-center gap-4 h-12 border-b border-white/10 shrink-0 bg-white/5">
             <button
               onClick={() => canGoBack && setActiveStage(STAGES[activeIndex - 1])}
               disabled={!canGoBack}
@@ -433,7 +435,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
           </div>
 
           {/* Stage instructions */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+          <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8">
             <div className="text-left">
               <span className="inline-flex px-2 py-0.5 bg-white/5 rounded-sm border border-white/10 text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4 font-mono">
                 {STAGE_META[activeStage].label}
@@ -460,6 +462,54 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
                     <li key={i} className="flex gap-3 text-sm text-white/70">
                       <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
                       <span className="leading-relaxed">{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {problem.constraints?.length > 0 && (
+              <div className="text-left">
+                <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3 font-mono">
+                  Constraints & Notes
+                </h3>
+                <ul className="space-y-3">
+                  {problem.constraints.map((c, i) => (
+                    <li key={i} className="flex gap-3 text-sm text-white/70">
+                      <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
+                      <span className="leading-relaxed">{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {problem.testCases?.length > 0 && (
+              <div className="text-left">
+                <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3 font-mono">
+                  Test Cases
+                </h3>
+                <ul className="space-y-3">
+                  {problem.testCases.map((tc, i) => (
+                    <li key={i} className="flex gap-3 text-sm text-white/70">
+                      <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
+                      <span className="leading-relaxed">{tc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {problem.extensibilityHooks?.length > 0 && (
+              <div className="text-left">
+                <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3 font-mono">
+                  Extensibility Scenarios
+                </h3>
+                <ul className="space-y-3">
+                  {problem.extensibilityHooks.map((h, i) => (
+                    <li key={i} className="flex gap-3 text-sm text-white/70">
+                      <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
+                      <span className="leading-relaxed">{h}</span>
                     </li>
                   ))}
                 </ul>
@@ -544,7 +594,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
           ) : (
             // Editor View
             <>
-              <div className="flex items-center justify-between px-6 py-2.5 border-b border-white/10 bg-white/5 shrink-0">
+              <div className="flex items-center justify-between px-6 h-12 border-b border-white/10 bg-white/5 shrink-0">
                 <span className="text-xs font-bold font-mono text-white/50 uppercase tracking-wider">
                   {STAGE_META[activeStage].label}
                 </span>
@@ -553,7 +603,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
                 </span>
               </div>
     
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto no-scrollbar">
                 <SimpleEditor
                   key={activeStage}
                   value={contents[activeStage]}
