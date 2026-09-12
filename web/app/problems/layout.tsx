@@ -31,8 +31,8 @@ export default function ProblemsLayout({
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <div className="flex-1 overflow-hidden">{children}</div>
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1">{children}</div>
     </div>
   );
 }
