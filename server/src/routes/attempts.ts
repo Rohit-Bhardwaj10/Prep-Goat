@@ -415,19 +415,27 @@ router.post('/:id/submit', async (req: Request, res: Response) => {
       )
     ]);
 
-    // 6. Call LLM evaluator
-    const { LLMEvaluator } = await import('../domain/LLMEvaluator');
-    const evaluator = new LLMEvaluator(process.env.GROQ_API_KEY!);
-
+    // 6. Pick evaluator based on problem type
     const problem = {
       id: raw.problem.id,
       title: raw.problem.title,
       description: raw.problem.description,
       requirements: raw.problem.requirements as string[],
       constraints: raw.problem.constraints as string[],
+      testCases: raw.problem.testCases as string[] | undefined,
+      extensibilityHooks: raw.problem.extensibilityHooks as string[] | undefined,
     };
 
-    const results = await evaluator.evaluate(evaluatingStages, problem);
+    let results;
+    if (raw.problem.type === 'HLD') {
+      const { HLDEvaluator } = await import('../domain/HLDEvaluator');
+      const evaluator = new HLDEvaluator(process.env.GROQ_API_KEY!);
+      results = await evaluator.evaluate(evaluatingStages, problem);
+    } else {
+      const { LLMEvaluator } = await import('../domain/LLMEvaluator');
+      const evaluator = new LLMEvaluator(process.env.GROQ_API_KEY!);
+      results = await evaluator.evaluate(evaluatingStages, problem);
+    }
 
     // 7. Persist evaluation (upsert in case of retry)
     const evaluation = await prisma.evaluation.upsert({

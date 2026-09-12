@@ -1,16 +1,7 @@
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Editor } from './Editor';
-
-interface Problem {
-  id: string;
-  title: string;
-  description: string;
-  requirements: string[];
-  constraints: string[];
-}
-
-// Problem fetching is now done within the attempt endpoint to avoid leaking private fields
+import { HLDEditor } from './HLDEditor';
 
 async function getAttempt(attemptId: string) {
   try {
@@ -42,15 +33,28 @@ export default async function AttemptEditorPage({
   const data = await getAttempt(attemptId);
 
   if (!data || !data.attempt) notFound();
-  
-  // Ensure the problem ID matches (just a sanity check)
+
+  // Sanity: ensure the attempt belongs to the problem in the URL
   if (data.attempt.problem.id !== problemId) notFound();
+
+  const problem = data.attempt.problem;
+
+  // Route to HLD editor for HLD problems, LLD editor for everything else
+  if (problem.type === 'HLD') {
+    return (
+      <HLDEditor
+        attemptId={attemptId}
+        problemId={problemId}
+        problem={problem}
+      />
+    );
+  }
 
   return (
     <Editor
       attemptId={attemptId}
       problemId={problemId}
-      problem={data.attempt.problem}
+      problem={problem}
     />
   );
 }

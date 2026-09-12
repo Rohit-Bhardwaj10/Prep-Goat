@@ -9,8 +9,9 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding problems...");
-  await prisma.problem.deleteMany({});
-  
+  // Only delete HLD problems to avoid breaking existing LLD attempts
+  await prisma.problem.deleteMany({ where: { type: 'HLD' } });
+
   await prisma.problem.createMany({
     data: [
       {
@@ -352,6 +353,364 @@ async function main() {
   });
   
   console.log("Seeding completed.");
+
+  // ── HLD Problems ───────────────────────────────────────────────────────────
+  await prisma.problem.createMany({
+    data: [
+      {
+        title: "URL Shortener",
+        description: "Design a scalable URL shortening service like bit.ly that converts long URLs into short aliases and redirects users.",
+        difficulty: "EASY",
+        type: "HLD",
+        tags: ["Hashing", "Caching", "Read-Heavy"],
+        requirements: [
+          "Generate a unique short alias (6-8 chars) for any long URL.",
+          "Redirect short URL to original in < 10ms p99.",
+          "Support 100M URLs, 10B redirects/month.",
+          "Allow custom aliases.",
+          "Expire URLs after a configurable TTL."
+        ],
+        constraints: [
+          "Read:Write ratio ~1000:1.",
+          "Globally distributed: users on all continents.",
+          "Alias uniqueness must be guaranteed across all nodes."
+        ],
+        testCases: [
+          "Two users request the same long URL simultaneously → only one alias created",
+          "Expired URL accessed → 404 or redirect to expiry page",
+          "Custom alias that conflicts with existing alias → reject with clear error"
+        ],
+        extensibilityHooks: [
+          "Add analytics: click counts, referrer, geo breakdown",
+          "Support QR code generation for each short URL",
+          "Add per-user link management dashboard"
+        ],
+        hints: [
+          "Base62 encoding of an auto-incremented DB ID gives collision-free short codes.",
+          "A CDN or Redis layer in front of the redirect service eliminates most DB reads.",
+          "Consistent hashing helps distribute alias generation across nodes."
+        ],
+        sampleSolution: "Components: API Gateway → Write Service → ID Generator (Snowflake/Counter) → SQL DB (id, short, long, expiry). Read path: API Gateway → Redis Cache → Read Replicas. Alias = base62(counter). Cache with TTL matching URL expiry. CDN for static redirects."
+      },
+      {
+        title: "Twitter / X Feed",
+        description: "Design the core newsfeed system for a social media platform: users post tweets and see a real-time feed of accounts they follow.",
+        difficulty: "HARD",
+        type: "HLD",
+        tags: ["Fan-out", "Caching", "Real-time"],
+        requirements: [
+          "Users post tweets (text, image, video).",
+          "Timeline shows tweets from all followed accounts, newest first.",
+          "Support 300M daily active users, 500M tweets/day.",
+          "Read latency < 100ms for timeline.",
+          "Support celebrity accounts with 50M+ followers."
+        ],
+        constraints: [
+          "Fan-out on write is expensive for celebrities (hotspot problem).",
+          "Eventual consistency acceptable for non-real-time followers.",
+          "Storage: tweets live forever; media stored in object store."
+        ],
+        testCases: [
+          "Celebrity posts tweet → 50M timelines updated without thundering herd",
+          "User unfollows account → their old tweets disappear from feed within seconds",
+          "User with no internet reconnects → sees missed tweets in order"
+        ],
+        extensibilityHooks: [
+          "Add algorithmic ranking (engagement score) on top of chronological feed",
+          "Add trending topics service",
+          "Support lists (curated sub-feeds)"
+        ],
+        hints: [
+          "Use a hybrid fan-out: push for normal users, pull for celebrities.",
+          "Pre-computed timeline cache per user in Redis gives sub-10ms reads.",
+          "Kafka for async tweet delivery to followers."
+        ],
+        sampleSolution: "Write path: Tweet Service → Kafka → Fan-out Workers → Timeline Cache (Redis sorted set per user). Read path: Timeline Service → Redis (cache hit) or pull from DB. Celebrities: pull-on-read merged with push feed. Media: upload to S3/CDN. Search: Elasticsearch for full-text."
+      },
+      {
+        title: "Ride-Sharing Platform (Uber)",
+        description: "Design the backend for a ride-sharing service: matching riders to nearby drivers in real-time.",
+        difficulty: "HARD",
+        type: "HLD",
+        tags: ["Geospatial", "Real-time", "Matching"],
+        requirements: [
+          "Rider requests a ride with pickup & dropoff.",
+          "Match rider to nearest available driver within 30s.",
+          "Track driver location in real-time (GPS ping every 5s).",
+          "Calculate ETA and fare upfront.",
+          "Support 5M concurrent rides globally."
+        ],
+        constraints: [
+          "Location updates: 1M drivers × 1 ping/5s = 200K writes/s.",
+          "Matching latency < 2s from request to driver notification.",
+          "Fare accuracy must be consistent across retries."
+        ],
+        testCases: [
+          "All nearby drivers are busy → rider placed in queue, notified when one frees up",
+          "Driver cancels mid-trip → system immediately re-matches rider",
+          "Surge pricing activates in downtown area → fares update in real time"
+        ],
+        extensibilityHooks: [
+          "Add carpooling: match multiple riders heading same direction",
+          "Add scheduled rides booked 24h in advance",
+          "Add driver earnings dashboard with daily/weekly breakdowns"
+        ],
+        hints: [
+          "Geohash or QuadTree partitions the map for O(1) nearby driver lookup.",
+          "Separate location update stream (Kafka/Redis) from the matching service.",
+          "Use a consistent-hash ring to shard drivers by region."
+        ],
+        sampleSolution: "Location Service: drivers push GPS → Kafka → Location Store (Redis Geospatial). Matching Service: on ride request, query Redis GEORADIUS → rank by ETA → notify driver via WebSocket. Trip Service: manages trip state machine. Pricing Service: computes fare (base + surge). Maps API for routing/ETA."
+      },
+      {
+        title: "YouTube / Video Streaming",
+        description: "Design a large-scale video upload, processing, and streaming platform.",
+        difficulty: "HARD",
+        type: "HLD",
+        tags: ["CDN", "Encoding", "Streaming"],
+        requirements: [
+          "Users upload videos up to 10GB.",
+          "Videos are transcoded to multiple resolutions (360p, 720p, 1080p, 4K).",
+          "Stream video to 2B users globally with < 500ms start time.",
+          "Support adaptive bitrate (ABR) streaming.",
+          "Store video metadata, comments, and likes."
+        ],
+        constraints: [
+          "Upload bandwidth: 500 hours of video uploaded per minute.",
+          "Streaming: 1B hours watched per day.",
+          "Storage: exabytes of video data."
+        ],
+        testCases: [
+          "User uploads a 2GB video → all resolutions available within 5 minutes",
+          "Popular video spikes to 10M concurrent viewers → no buffering",
+          "User pauses and resumes after 1 hour → resume from exact byte position"
+        ],
+        extensibilityHooks: [
+          "Add live streaming support",
+          "Add automatic captioning / subtitle generation",
+          "Add content ID matching for copyright detection"
+        ],
+        hints: [
+          "Chunk upload (multipart) + resumable upload protocol for reliability.",
+          "Transcoding pipeline: upload → S3 → SQS → transcoding workers → S3.",
+          "CDN edge nodes serve video segments; ABR playlist (HLS/DASH) selects quality."
+        ],
+        sampleSolution: "Upload: chunked multipart → S3 raw. Transcoding: SQS → worker fleet → FFmpeg → S3 multiple resolutions. CDN (CloudFront) caches segments. Metadata: PostgreSQL. Search: Elasticsearch. Recommendations: ML pipeline on watch history. Comments: Cassandra (high write throughput)."
+      },
+      {
+        title: "WhatsApp / Messaging System",
+        description: "Design a real-time messaging system supporting 1-on-1 and group chats with guaranteed delivery.",
+        difficulty: "MEDIUM",
+        type: "HLD",
+        tags: ["WebSocket", "Message Queue", "Consistency"],
+        requirements: [
+          "Send and receive messages in real-time.",
+          "Support group chats up to 256 members.",
+          "Guarantee at-least-once delivery; show read receipts.",
+          "Persist message history for 7 years.",
+          "Support 2B users, 100B messages/day."
+        ],
+        constraints: [
+          "Messages must be delivered even if recipient is offline (store-and-forward).",
+          "End-to-end encryption (E2EE) — server must not read plaintext.",
+          "Message ordering must be consistent within a conversation."
+        ],
+        testCases: [
+          "Recipient is offline for 3 days → messages delivered in order when they reconnect",
+          "256-member group message → all members receive within 1s",
+          "Network partitioned mid-send → message not duplicated on retry"
+        ],
+        extensibilityHooks: [
+          "Add voice/video calls over WebRTC",
+          "Add disappearing messages with per-chat TTL",
+          "Add message reactions and threaded replies"
+        ],
+        hints: [
+          "Each chat-server holds WebSocket connections; a message router dispatches to the right server.",
+          "Cassandra for message storage: partition by conversation_id, cluster by timestamp.",
+          "Sequence numbers per conversation ensure ordering and deduplication."
+        ],
+        sampleSolution: "WebSocket gateway per region. Message Service assigns sequence number → Kafka → Delivery Workers (push to online clients, store for offline). Storage: Cassandra (messages) + Redis (online user map). Read receipts: ack flow back through Kafka. Groups: fan-out to each member's inbox."
+      },
+      {
+        title: "Distributed Rate Limiter",
+        description: "Design a distributed rate limiting service that enforces per-user and per-endpoint request quotas across a fleet of API servers.",
+        difficulty: "MEDIUM",
+        type: "HLD",
+        tags: ["Distributed Systems", "Redis", "API Gateway"],
+        requirements: [
+          "Enforce N requests per second/minute per user or API key.",
+          "Work across 100+ API server nodes.",
+          "Latency overhead of rate check < 5ms.",
+          "Support multiple algorithms: token bucket, sliding window.",
+          "Graceful degradation if rate-limit service is down."
+        ],
+        constraints: [
+          "Strong consistency required: no double-spending of quota.",
+          "Rate limiter must not become a single point of failure.",
+          "Must handle 1M+ unique keys simultaneously."
+        ],
+        testCases: [
+          "User sends 101 requests in 1 second with 100 RPS limit → 101st is rejected",
+          "Rate limiter Redis cluster loses a node → API servers fall back to local counters",
+          "Burst of 500 requests in 100ms under token bucket → correct bucket drain"
+        ],
+        extensibilityHooks: [
+          "Add per-plan limits (free vs. paid tiers)",
+          "Add circuit breaker integration (stop rate-checking overloaded services)",
+          "Add real-time rate limit dashboard and alerting"
+        ],
+        hints: [
+          "Redis INCR + EXPIRE implements a fixed window counter atomically.",
+          "Sliding window log: store timestamps in a Redis sorted set, prune old entries.",
+          "Use Redis Cluster with read replicas; local token bucket as fallback."
+        ],
+        sampleSolution: "API Gateway checks rate before forwarding. Rate Limiter Service: Redis Cluster stores token bucket state per key (INCRBY + TTL). Lua script for atomic check-and-decrement. Fallback: local in-memory bucket per node (allows brief over-quota on failure). Prometheus metrics for monitoring quota usage."
+      },
+      {
+        title: "Google Drive / Cloud Storage",
+        description: "Design a cloud file storage and sync service where users upload, organize, and share files across devices.",
+        difficulty: "MEDIUM",
+        type: "HLD",
+        tags: ["Sync", "Object Storage", "Collaboration"],
+        requirements: [
+          "Upload, download, and organize files in folders.",
+          "Sync changes across all user devices in real-time.",
+          "Support file sharing with view/edit permissions.",
+          "Handle files up to 5TB.",
+          "Support 1B users, 15 exabytes of storage."
+        ],
+        constraints: [
+          "Bandwidth efficiency: only upload changed chunks (delta sync).",
+          "Consistency: two devices editing the same file → last-write-wins or conflict copy.",
+          "Metadata operations (rename, delete) must be transactional."
+        ],
+        testCases: [
+          "User edits large file → only changed 4MB chunk re-uploaded, not full 2GB file",
+          "Two devices edit same file offline simultaneously → conflict copy created",
+          "Shared folder: 1000 collaborators all see a new file within 5 seconds"
+        ],
+        extensibilityHooks: [
+          "Add version history (last 30 versions)",
+          "Add real-time collaborative editing (Google Docs-style)",
+          "Add virus scanning on upload"
+        ],
+        hints: [
+          "Split files into 4MB chunks; hash each chunk (SHA-256) to detect changes.",
+          "Metadata DB (PostgreSQL) tracks file tree; chunks stored in S3.",
+          "Delta sync: client sends list of chunk hashes → server replies with which to upload."
+        ],
+        sampleSolution: "Client SDK chunks files + computes hashes. Upload API: POST chunk list → server returns missing chunks → client uploads only those to S3. Metadata: PostgreSQL (files, folders, permissions, version history). Sync: long-poll or WebSocket notification when remote changes. CDN for fast downloads. Search: Elasticsearch on metadata."
+      },
+      {
+        title: "Search Autocomplete / Typeahead",
+        description: "Design a real-time search suggestion service that shows relevant completions as the user types, at Google scale.",
+        difficulty: "EASY",
+        type: "HLD",
+        tags: ["Trie", "Caching", "Read-Heavy"],
+        requirements: [
+          "Return top-10 suggestions within 100ms for any prefix.",
+          "Suggestions ranked by popularity (search frequency).",
+          "Support 10B queries/day, 500M unique queries/month.",
+          "Update suggestions based on recent trends (near real-time).",
+          "Support multiple languages."
+        ],
+        constraints: [
+          "Read:Write ratio ~10000:1.",
+          "Prefix index must fit in memory for fast lookup.",
+          "Trending queries should surface within 15 minutes of going viral."
+        ],
+        testCases: [
+          "User types 'appl' → sees [apple, application, apple watch, apple store, ...] in < 50ms",
+          "Trending query spikes 1000× in 10 minutes → appears in suggestions within 15 minutes",
+          "Rare 3-word query → system gracefully returns best partial match"
+        ],
+        extensibilityHooks: [
+          "Add personalized suggestions based on user search history",
+          "Add spell-correction for misspelled prefixes",
+          "Add image/product previews alongside text suggestions"
+        ],
+        hints: [
+          "Pre-compute top-k suggestions per prefix and cache in Redis.",
+          "Trie in memory for exact prefix match; top-k stored at each node.",
+          "Stream recent searches through Kafka → batch job updates trie every 15 minutes."
+        ],
+        sampleSolution: "Data collection: log searches → Kafka → Spark aggregation (hourly/daily). Trie Builder: compute top-10 per prefix → store in Redis (key = prefix). Suggestion API: lookup prefix in Redis (< 1ms). CDN caches common prefixes. Fallback: Elasticsearch prefix query. Personalization layer merges global + user-specific scores."
+      },
+      {
+        title: "Notification Service",
+        description: "Design a high-throughput notification system that delivers push, email, and SMS notifications reliably to millions of users.",
+        difficulty: "MEDIUM",
+        type: "HLD",
+        tags: ["Message Queue", "Fan-out", "Multi-channel"],
+        requirements: [
+          "Support push (iOS/Android), email, and SMS channels.",
+          "Deliver notifications within 5 seconds of trigger.",
+          "Handle 1M notifications/second at peak.",
+          "Guarantee at-least-once delivery; deduplicate on retry.",
+          "Support per-user channel preferences and quiet hours."
+        ],
+        constraints: [
+          "Third-party providers (APNs, FCM, SendGrid, Twilio) have rate limits.",
+          "Do not spam: enforce per-user per-type rate limiting.",
+          "Notifications must not be lost if a downstream provider is unavailable."
+        ],
+        testCases: [
+          "Provider FCM is down for 30 min → notifications queued and delivered when it recovers",
+          "User sets quiet hours 10pm–8am → notifications held and delivered at 8am",
+          "Same notification triggered twice due to upstream retry → user receives it once"
+        ],
+        extensibilityHooks: [
+          "Add in-app notification inbox (persistent feed)",
+          "Add notification analytics (open rate, click rate)",
+          "Add A/B testing for notification copy"
+        ],
+        hints: [
+          "Use a topic-based Kafka architecture: one topic per channel type.",
+          "Idempotency key per notification prevents duplicates on retry.",
+          "Worker pools per provider respect rate limits independently."
+        ],
+        sampleSolution: "Notification API → Kafka (topic per channel). Workers per channel: validate preferences, check quiet hours, apply rate limit, call provider SDK. Retry queue with exponential backoff for failed deliveries. Dedup: Redis SET with notification_id + TTL. DLQ for permanently failed notifications. Analytics: emit events to Kafka → ClickHouse."
+      },
+      {
+        title: "Distributed Task Queue (Celery / Sidekiq-style)",
+        description: "Design a distributed task queue system for offloading long-running background jobs from web servers.",
+        difficulty: "MEDIUM",
+        type: "HLD",
+        tags: ["Queue", "Workers", "Reliability"],
+        requirements: [
+          "Enqueue tasks from web servers; workers process them asynchronously.",
+          "Support task priorities, retries with exponential backoff, and dead-letter queues.",
+          "Schedule tasks for future execution (cron-style).",
+          "Monitor task status and execution history.",
+          "Handle 100K tasks/second at peak."
+        ],
+        constraints: [
+          "Tasks must not be lost if a worker crashes mid-execution.",
+          "At-least-once delivery; tasks should be idempotent.",
+          "Worker fleet scales horizontally; tasks distributed evenly."
+        ],
+        testCases: [
+          "Worker crashes mid-task → task re-queued and executed by another worker",
+          "Task fails 3 times → moved to DLQ with full error trace",
+          "Scheduled task set for 3am → executes within 1 second of scheduled time"
+        ],
+        extensibilityHooks: [
+          "Add task chaining (workflow DAG: task B runs after task A succeeds)",
+          "Add per-queue rate limiting (max N tasks/s per queue)",
+          "Add real-time worker dashboard showing queue depths and throughput"
+        ],
+        hints: [
+          "Redis lists or Kafka topics as the queue backend; BRPOPLPUSH for reliable dequeue.",
+          "Heartbeat mechanism: worker marks task as 'in-progress'; scheduler re-queues if heartbeat stops.",
+          "Separate scheduler service polls a sorted set (score = run_at timestamp) for due tasks."
+        ],
+        sampleSolution: "Broker: Redis (low latency) or Kafka (high throughput). Worker: BRPOPLPUSH to move task to in-progress set → execute → ACK removes from in-progress. Retry: exponential backoff with jitter, max 5 attempts → DLQ. Scheduler: daemon polls Redis ZRANGEBYSCORE (score=epoch) → enqueue due tasks. Monitoring: Prometheus + Grafana for queue depths."
+      },
+    ],
+  });
+
+  console.log("HLD problems seeded.");
 }
 
 main()

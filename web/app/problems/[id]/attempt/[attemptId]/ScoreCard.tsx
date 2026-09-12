@@ -29,9 +29,10 @@ interface ScoreCardProps {
 }
 
 const STAGE_LABELS: Record<string, string> = {
+  // LLD labels
   REQUIREMENTS: 'Requirements',
-  DESIGN: 'Class Design',
-  EXTENSION: 'Extension',
+  DESIGN: 'Design',         // shown for both LLD (class design) and HLD (architecture diagram)
+  EXTENSION: 'Extension & Trade-offs',
 };
 
 function scoreColor(score: number) {
