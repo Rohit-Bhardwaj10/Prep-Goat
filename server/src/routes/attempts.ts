@@ -279,7 +279,10 @@ router.put('/:id/stages', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { stageType, content } = req.body;
 
+  console.log(`[DEBUG] PUT stages request received for attempt ${id}, stage ${stageType}. Content length:`, content?.length);
+
   if (!stageType || content === undefined) {
+    console.log('[DEBUG] Missing stageType or content');
     res.status(400).json({ error: 'stageType and content are required' });
     return;
   }
@@ -288,10 +291,12 @@ router.put('/:id/stages', async (req: Request, res: Response) => {
     // Verify ownership
     const attempt = await prisma.attempt.findUnique({ where: { id } });
     if (!attempt) {
+      console.log('[DEBUG] Attempt not found');
       res.status(404).json({ error: 'Attempt not found' });
       return;
     }
     if (attempt.learnerId !== session.user.id) {
+      console.log('[DEBUG] Forbidden');
       res.status(403).json({ error: 'Forbidden' });
       return;
     }
@@ -302,20 +307,24 @@ router.put('/:id/stages', async (req: Request, res: Response) => {
     });
 
     if (!stage) {
+      console.log('[DEBUG] Stage not found');
       res.status(404).json({ error: 'Stage not found' });
       return;
     }
 
     // Only allow edits in DRAFT or FAILED status
     if (stage.status !== 'DRAFT' && stage.status !== 'FAILED') {
+      console.log(`[DEBUG] Conflict: stage is in ${stage.status}`);
       res.status(409).json({ error: `Stage cannot be edited in status ${stage.status}` });
       return;
     }
 
+    console.log(`[DEBUG] Updating DB for stage ID ${stage.id}...`);
     const updated = await prisma.stage.update({
       where: { id: stage.id },
       data: { content },
     });
+    console.log(`[DEBUG] Update successful!`);
 
     res.json({ stage: updated });
   } catch (err) {

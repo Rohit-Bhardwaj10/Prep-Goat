@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { Tldraw, createTLStore, defaultShapeUtils, TLStoreWithStatus } from '@tldraw/tldraw';
+import { Tldraw, getSnapshot, loadSnapshot, TLStoreWithStatus } from '@tldraw/tldraw';
 import '@tldraw/tldraw/tldraw.css';
 
 const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
@@ -28,16 +28,23 @@ export function TldrawEditor({
   const saveContent = useCallback(
     async (snapshotJson: string) => {
       onSaveStatusChange?.('saving');
+      console.log('[TldrawEditor] Attempting to save snapshot of length:', snapshotJson.length);
       try {
-        await fetch(`${SERVER}/api/attempts/${attemptId}/stages`, {
+        const res = await fetch(`${SERVER}/api/attempts/${attemptId}/stages`, {
           method: 'PUT',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ stageType, content: snapshotJson }),
         });
+        if (!res.ok) {
+          console.error('[TldrawEditor] Save failed with status:', res.status);
+          throw new Error('Failed to save');
+        }
+        console.log('[TldrawEditor] Save successful!');
         onSaveStatusChange?.('saved');
         setTimeout(() => onSaveStatusChange?.('idle'), 2500);
-      } catch {
+      } catch (err) {
+        console.error('[TldrawEditor] Save error:', err);
         onSaveStatusChange?.('error');
         setTimeout(() => onSaveStatusChange?.('idle'), 2500);
       }
@@ -51,11 +58,12 @@ export function TldrawEditor({
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(() => {
         try {
-          const snapshot = store.getSnapshot();
+          console.log('[TldrawEditor] Extracting snapshot...');
+          const snapshot = getSnapshot(store);
           const json = JSON.stringify(snapshot);
           saveContent(json);
-        } catch {
-          // snapshot failed — ignore
+        } catch (err) {
+          console.error('[TldrawEditor] Error extracting snapshot:', err);
         }
       }, DEBOUNCE_MS);
     },
@@ -75,12 +83,11 @@ export function TldrawEditor({
   return (
     <div className="w-full h-full relative">
       <Tldraw
-        snapshot={initialSnapshot}
         onMount={(editor) => {
           storeRef.current = editor.store as any;
           if (initialSnapshot) {
             try {
-              editor.loadSnapshot(initialSnapshot);
+              loadSnapshot(editor.store, initialSnapshot);
             } catch (err) {
               console.error('Failed to load snapshot', err);
             }
