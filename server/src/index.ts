@@ -5,12 +5,13 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth";
 import problemsRouter from "./routes/problems";
 import attemptsRouter from "./routes/attempts";
+import adminRouter from "./routes/admin";
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, "http://localhost:3000"] : ["http://localhost:3000"],
+  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, "http://localhost:3000", "http://localhost:3001"] : ["http://localhost:3000", "http://localhost:3001"],
   credentials: true,
 }));
 
@@ -24,6 +25,7 @@ app.use(express.json({ limit: '10mb' }));
 
 app.use("/api/problems", problemsRouter);
 app.use("/api/attempts", attemptsRouter);
+app.use("/api/admin", adminRouter);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
