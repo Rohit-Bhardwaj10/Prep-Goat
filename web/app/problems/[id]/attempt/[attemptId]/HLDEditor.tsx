@@ -107,9 +107,9 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
         const map: Record<string, string> = {};
         data.attempt.stages.forEach((s) => { map[s.stageType] = s.content; });
         setContents({
-          REQUIREMENTS: map['REQUIREMENTS'] || '',
+          REQUIREMENTS: map['REQUIREMENTS'] || `// Requirements & Estimation\n\n// 1. Functional Requirements\n\n\n// 2. Non-Functional Requirements\n\n\n// 3. Capacity Estimation\n\n`,
           DESIGN: map['DESIGN'] || '',
-          EXTENSION: map['EXTENSION'] || '',
+          EXTENSION: map['EXTENSION'] || `// Deep Dive & Scaling\n\n${(problem.extensibilityHooks || ['Identify the biggest bottleneck and how you would scale it.']).map((q, i) => `// Q${i + 1}: ${q}\n\n`).join('\n')}`,
         });
         setAttemptStatus(data.attempt.status);
         if (data.attempt.evaluation) setEvaluation(data.attempt.evaluation.results);
