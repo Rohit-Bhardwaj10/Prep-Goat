@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { startAttempt } from '../../actions';
 import { HintPanel } from './HintPanel';
+import { CheatsheetPanel } from './CheatsheetPanel';
 import { ScoreCard } from './ScoreCard';
 
 // tldraw is a heavy ESM-only bundle — import client-side only
@@ -417,6 +418,7 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
               initialUnlockedHints={problem.hints || []}
               status={attemptStatus}
             />
+            <CheatsheetPanel />
           </div>
         </aside>
 
@@ -539,6 +541,7 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
                   stageType="DESIGN"
                   initialContent={contents['DESIGN']}
                   disabled={attemptStatus !== 'DRAFT'}
+                  isVisible={isCanvasStage}
                   onSaveStatusChange={setSaveStatus}
                 />
               </div>

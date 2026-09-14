@@ -10,6 +10,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css'; // Dark theme for prism
 import { startAttempt } from '../../actions';
 import { HintPanel } from './HintPanel';
+import { CheatsheetPanel } from './CheatsheetPanel';
 import { ScoreCard } from './ScoreCard';
 
 const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
@@ -538,6 +539,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
               initialUnlockedHints={problem.hints || []}
               status={attemptStatus}
             />
+            <CheatsheetPanel />
           </div>
         </aside>
 

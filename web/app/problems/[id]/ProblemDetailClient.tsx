@@ -8,6 +8,7 @@ import { Navbar } from '@/components/Navbar';
 
 interface Problem {
   id: string;
+  type: 'HLD' | 'LLD';
   title: string;
   description: string;
   requirements: string[];
@@ -160,7 +161,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
 
           {/* Bottom: Action Button */}
           <div className="shrink-0 pt-6 border-t border-white/10 flex justify-between items-center">
-            <p className="text-sm text-white/50">Ready to build? You have up to 15 points to earn.</p>
+            <p className="text-sm text-white/50">Ready to build? Show off your system design skills.</p>
             <button
               onClick={() => startTransition(() => startAttempt(problem.id))}
               disabled={isPending}
@@ -212,7 +213,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                           </span>
                           {attempt.totalScore !== null && (
                             <span className="font-mono text-sm font-semibold bg-white/10 text-white/80 px-2 py-0.5 rounded">
-                              {attempt.totalScore}/15
+                              {attempt.totalScore}/{attempt.maxScore ?? (problem.type === 'HLD' ? 65 : 15)}
                             </span>
                           )}
                         </div>

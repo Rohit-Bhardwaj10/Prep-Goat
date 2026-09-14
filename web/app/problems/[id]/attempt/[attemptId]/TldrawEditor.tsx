@@ -12,6 +12,7 @@ interface TldrawEditorProps {
   stageType: 'REQUIREMENTS' | 'DESIGN' | 'EXTENSION';
   initialContent: string; // JSON string of TLStore snapshot, or ''
   disabled?: boolean;
+  isVisible?: boolean;
   onSaveStatusChange?: (status: 'idle' | 'saving' | 'saved' | 'error') => void;
 }
 
@@ -20,10 +21,12 @@ export function TldrawEditor({
   stageType,
   initialContent,
   disabled = false,
+  isVisible = true,
   onSaveStatusChange,
 }: TldrawEditorProps) {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const storeRef = useRef<TLStoreWithStatus | null>(null);
+  const editorRef = useRef<any>(null);
 
   const saveContent = useCallback(
     async (snapshotJson: string) => {
@@ -70,6 +73,19 @@ export function TldrawEditor({
     [disabled, saveContent]
   );
 
+  // Zoom to fit when the canvas becomes visible and is read-only
+  useEffect(() => {
+    if (isVisible && disabled && editorRef.current) {
+      setTimeout(() => {
+        try {
+          editorRef.current.zoomToFit({ animation: { duration: 0 } });
+        } catch (e) {
+          console.error('Failed to zoom to fit', e);
+        }
+      }, 50);
+    }
+  }, [isVisible, disabled]);
+
   // Parse initial snapshot
   let initialSnapshot: any = undefined;
   if (initialContent) {
@@ -85,6 +101,7 @@ export function TldrawEditor({
       <Tldraw
         onMount={(editor) => {
           storeRef.current = editor.store as any;
+          editorRef.current = editor;
           if (initialSnapshot) {
             try {
               loadSnapshot(editor.store, initialSnapshot);
@@ -100,6 +117,11 @@ export function TldrawEditor({
           if (disabled) {
             editor.setCurrentTool('hand');
             editor.updateInstanceState({ isReadonly: true });
+          }
+          if (isVisible && disabled) {
+            setTimeout(() => {
+              try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (e) {}
+            }, 50);
           }
         }}
         hideUi={disabled}

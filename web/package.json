@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.20",
     "@tldraw/tldraw": "^5.4.2",
     "better-auth": "^1.7.3",
     "lucide-react": "^1.43.0",
@@ -16,8 +17,10 @@
     "prismjs": "^1.30.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
     "react-simple-code-editor": "^0.14.1",
-    "recharts": "^3.10.1"
+    "recharts": "^3.10.1",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
