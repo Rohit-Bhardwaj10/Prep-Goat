@@ -147,6 +147,11 @@ export class HLDEvaluator implements Evaluator {
       - DESIGN stage: Component identification, communication patterns (sync/async), storage choices, separation of concerns, diagram clarity
       - EXTENSION stage: Bottleneck identification, caching/sharding strategy, consistency trade-offs, fault tolerance, CAP theorem awareness
 
+      CRITICAL ISOLATION RULES:
+      1. You MUST evaluate the DESIGN stage STRICTLY based on the "[ARCHITECTURE DIAGRAM — text labels extracted from canvas]" section.
+      2. If a component (e.g., Cache, Kafka, Snowflake) is mentioned in the EXTENSION or REQUIREMENTS text, but is missing from the ARCHITECTURE DIAGRAM, you MUST penalize the DESIGN score and explicitly state that the component was missing from the diagram.
+      3. Do not give credit in the DESIGN evaluation for ideas that only appear in the text responses.
+
       Respond with a JSON object strictly matching this schema:
       {
         "results": [

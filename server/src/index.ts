@@ -6,6 +6,7 @@ import { auth } from "./auth";
 import problemsRouter from "./routes/problems";
 import attemptsRouter from "./routes/attempts";
 import adminRouter from "./routes/admin";
+import { resourcesRouter } from "./routes/resources";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -26,6 +27,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use("/api/problems", problemsRouter);
 app.use("/api/attempts", attemptsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/resources", resourcesRouter);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

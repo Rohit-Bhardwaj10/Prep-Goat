@@ -40,12 +40,20 @@ router.get('/', async (req: Request, res: Response) => {
       orderBy: { createdAt: 'desc' },
     });
 
-    // Map attempts to include a total score if they have an evaluation
+    // Map attempts to include a total score and max score if they have an evaluation
     const mappedAttempts = attempts.map((a) => {
       let totalScore = null;
+      let maxScore = null;
       if (a.evaluation?.results) {
         const results = a.evaluation.results as any[];
-        totalScore = results.reduce((acc, curr) => acc + (curr.feedback?.[0]?.score || 0), 0);
+        totalScore = results.reduce(
+          (acc, curr) => acc + curr.feedback.reduce((s: number, f: any) => s + (f.score || 0), 0),
+          0
+        );
+        maxScore = results.reduce(
+          (acc, curr) => acc + curr.feedback.length * 5,
+          0
+        );
       }
       return {
         id: a.id,
@@ -53,6 +61,7 @@ router.get('/', async (req: Request, res: Response) => {
         status: a.status,
         createdAt: a.createdAt,
         totalScore,
+        maxScore,
       };
     });
 

@@ -13,18 +13,18 @@ export const prisma = basePrisma.$extends({
   query: {
     $allModels: {
       async $allOperations({ model, operation, args, query }) {
-        const maxRetries = 3;
+        const maxRetries = 5;
         const delayMs = 2000;
-        
+
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
           try {
             return await query(args);
           } catch (error: any) {
-            const isConnectionError = 
-              error.code === 'P1001' || 
+            const isConnectionError =
+              error.code === 'P1001' ||
               error.code === 'P2024' ||
               error.code === 'P1017' ||
-              error.message?.toLowerCase().includes('socket') || 
+              error.message?.toLowerCase().includes('socket') ||
               error.message?.toLowerCase().includes('connect') ||
               error.message?.toLowerCase().includes('terminate') ||
               error.message?.toLowerCase().includes('timeout') ||
@@ -46,7 +46,7 @@ export const prisma = basePrisma.$extends({
 export const auth = betterAuth({
   logger: { level: "debug" },
   database: prismaAdapter(prisma, {
-    provider: "postgresql", 
+    provider: "postgresql",
   }),
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:4000",
   trustedOrigins: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"] : ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
