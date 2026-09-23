@@ -3,7 +3,10 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { Resend } from "resend";
 import "dotenv/config";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 const adapter = new PrismaPg(pool);
@@ -52,6 +55,25 @@ export const auth = betterAuth({
   trustedOrigins: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"] : ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await resend.emails.send({
+        from: "PrepGoat <onboarding@resend.dev>",
+        to: user.email,
+        subject: "Verify your email address - PrepGoat",
+        html: `<p>Click the link below to verify your email address:</p><p><a href="${url}">Verify Email</a></p>`,
+      });
+    },
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
   },
   advanced: {
     defaultCookieAttributes: {

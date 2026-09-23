@@ -94,6 +94,21 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
+    // Check if there is an active/uncompleted attempt
+    const existingDraft = await prisma.attempt.findFirst({
+      where: {
+        problemId,
+        learnerId: session.user.id,
+        status: { not: 'COMPLETED' }
+      },
+      include: { stages: true },
+    });
+
+    if (existingDraft) {
+      res.status(200).json({ attempt: existingDraft });
+      return;
+    }
+
     // Create attempt with all 3 stages in one transaction
     const attempt = await prisma.attempt.create({
       data: {

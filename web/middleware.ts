@@ -8,6 +8,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
   
+  try {
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+    const res = await fetch(`${SERVER_URL}/api/auth/get-session`, {
+      headers: {
+        cookie: request.headers.get('cookie') || '',
+      }
+    });
+    
+    if (res.ok) {
+      const session = await res.json();
+      if (session?.user && session.user.emailVerified === false) {
+        return NextResponse.redirect(new URL('/verify-email', request.url));
+      }
+    }
+  } catch (error) {
+    console.error("Middleware session check failed", error);
+  }
+  
   return NextResponse.next();
 }
 
