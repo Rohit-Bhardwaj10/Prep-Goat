@@ -73,17 +73,21 @@ export function TldrawEditor({
     [disabled, saveContent]
   );
 
-  // Zoom to fit when the canvas becomes visible and is read-only
+  // Force tldraw to recalculate its canvas size when it becomes visible
   useEffect(() => {
-    if (isVisible && disabled && editorRef.current) {
-      setTimeout(() => {
-        try {
-          editorRef.current.zoomToFit({ animation: { duration: 0 } });
-        } catch (e) {
-          console.error('Failed to zoom to fit', e);
-        }
-      }, 50);
-    }
+    if (!isVisible) return;
+    const editor = editorRef.current;
+    if (!editor) return;
+    // Small delay to let the browser repaint after visibility change
+    const t = setTimeout(() => {
+      try {
+        editor.resize();
+      } catch (_) {}
+      try {
+        if (disabled) editor.zoomToFit({ animation: { duration: 0 } });
+      } catch (_) {}
+    }, 50);
+    return () => clearTimeout(t);
   }, [isVisible, disabled]);
 
   // Parse initial snapshot
@@ -118,11 +122,13 @@ export function TldrawEditor({
             editor.setCurrentTool('hand');
             editor.updateInstanceState({ isReadonly: true });
           }
-          if (isVisible && disabled) {
-            setTimeout(() => {
-              try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (e) {}
-            }, 50);
-          }
+          // Zoom after a short delay to let layout settle
+          setTimeout(() => {
+            try { editor.resize(); } catch (_) {}
+            if (disabled) {
+              try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (_) {}
+            }
+          }, 100);
         }}
         hideUi={disabled}
       />

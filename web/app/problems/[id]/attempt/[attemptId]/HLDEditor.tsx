@@ -534,7 +534,10 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
               </div>
 
               {/* DESIGN stage → tldraw canvas (always rendered but hidden when not active to preserve state) */}
-              <div className={`flex-1 overflow-hidden ${!isCanvasStage ? 'hidden' : 'flex'}`}>
+              <div
+                style={{ visibility: isCanvasStage ? 'visible' : 'hidden', height: isCanvasStage ? undefined : 0, overflow: 'hidden' }}
+                className="flex-1 flex overflow-hidden"
+              >
                 <TldrawEditor
                   key={`${attemptId}-DESIGN`}
                   attemptId={attemptId}
