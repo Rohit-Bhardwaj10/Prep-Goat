@@ -67,11 +67,15 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+      const backendUrl = process.env.BETTER_AUTH_URL || "http://localhost:4000";
+      const proxyUrl = url.replace(backendUrl, frontendUrl);
+
       await resend.emails.send({
         from: "PrepGoat <onboarding@resend.dev>",
         to: user.email,
         subject: "Verify your email address - PrepGoat",
-        html: `<p>Click the link below to verify your email address:</p><p><a href="${url}">Verify Email</a></p>`,
+        html: `<p>Click the link below to verify your email address:</p><p><a href="${proxyUrl}">Verify Email</a></p>`,
       });
     },
   },
