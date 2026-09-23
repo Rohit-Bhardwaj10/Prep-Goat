@@ -533,25 +533,44 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
                 )}
               </div>
 
-              {/* DESIGN stage → tldraw canvas (always rendered but hidden when not active to preserve state) */}
-              <div
-                style={{ visibility: isCanvasStage ? 'visible' : 'hidden', height: isCanvasStage ? undefined : 0, overflow: 'hidden' }}
-                className="flex-1 flex overflow-hidden"
-              >
-                <TldrawEditor
-                  key={`${attemptId}-DESIGN`}
-                  attemptId={attemptId}
-                  stageType="DESIGN"
-                  initialContent={contents['DESIGN']}
-                  disabled={attemptStatus !== 'DRAFT'}
-                  isVisible={isCanvasStage}
-                  onSaveStatusChange={setSaveStatus}
-                />
-              </div>
+              {/*
+                Stack tldraw + textarea in a position:relative container.
+                Both children are position:absolute inset-0 so tldraw always has
+                real pixel dimensions — the root cause of the black-screen bug.
+                We use opacity + pointer-events to toggle visibility instead of
+                display:none or height:0, which would collapse the element.
+              */}
+              <div className="flex-1 relative overflow-hidden">
 
-              {/* REQUIREMENTS / EXTENSION → plain textarea */}
-              {!isCanvasStage && (
-                <div className="flex-1 overflow-y-auto no-scrollbar flex">
+                {/* DESIGN canvas — always mounted, always full-size */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    opacity: isCanvasStage ? 1 : 0,
+                    pointerEvents: isCanvasStage ? 'auto' : 'none',
+                    zIndex: isCanvasStage ? 1 : 0,
+                  }}
+                >
+                  <TldrawEditor
+                    key={`${attemptId}-DESIGN`}
+                    attemptId={attemptId}
+                    stageType="DESIGN"
+                    initialContent={contents['DESIGN']}
+                    disabled={attemptStatus !== 'DRAFT'}
+                    isVisible={isCanvasStage}
+                    onSaveStatusChange={setSaveStatus}
+                  />
+                </div>
+
+                {/* REQUIREMENTS / EXTENSION textarea — shown on text stages */}
+                <div
+                  className="absolute inset-0 flex overflow-y-auto no-scrollbar"
+                  style={{
+                    opacity: isCanvasStage ? 0 : 1,
+                    pointerEvents: isCanvasStage ? 'none' : 'auto',
+                    zIndex: isCanvasStage ? 0 : 1,
+                  }}
+                >
                   <textarea
                     key={activeStage}
                     value={contents[activeStage]}
@@ -567,7 +586,8 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
                     className="w-full h-full p-6 bg-transparent text-sm font-mono text-white/85 leading-relaxed resize-none outline-none placeholder:text-white/20 disabled:opacity-60"
                   />
                 </div>
-              )}
+
+              </div>
             </>
           )}
         </div>
