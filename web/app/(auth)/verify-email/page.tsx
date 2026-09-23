@@ -2,15 +2,18 @@
 
 import { authClient } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
-import { Loader2, MailCheck, ArrowRight } from "lucide-react";
+import { Loader2, MailCheck } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [emailInput, setEmailInput] = useState(searchParams.get("email") || "");
 
   useEffect(() => {
     // Check if they are already verified
@@ -26,15 +29,14 @@ export default function VerifyEmailPage() {
     setMessage("");
     setError("");
     
-    const { data: session } = await authClient.getSession();
-    if (!session?.user?.email) {
-      setError("No user session found. Please log in again.");
+    if (!emailInput) {
+      setError("Please enter your email address.");
       setIsSending(false);
       return;
     }
 
     const { error } = await authClient.sendVerificationEmail({
-      email: session.user.email,
+      email: emailInput,
       callbackURL: "/problems", // Where they should go after verifying
     });
 
@@ -70,15 +72,24 @@ export default function VerifyEmailPage() {
             {error}
           </div>
         )}
-
-        <button
-          onClick={handleResend}
-          disabled={isSending}
-          className="w-full py-2.5 bg-white/5 border border-white/10 text-white font-medium rounded-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
-        >
-          {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          Resend Verification Email
-        </button>
+        
+        <div className="space-y-3">
+          <input
+            type="email"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+            placeholder="Confirm your email"
+            className="w-full px-4 py-2.5 bg-[#1a1a1a] rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white text-sm"
+          />
+          <button
+            onClick={handleResend}
+            disabled={isSending || !emailInput}
+            className="w-full py-2.5 bg-white/5 border border-white/10 text-white font-medium rounded-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+            Resend Verification Email
+          </button>
+        </div>
 
         <div className="pt-6 border-t border-white/10">
           <button 
@@ -93,5 +104,17 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+        <Loader2 className="w-8 h-8 text-[#ff6b35] animate-spin" />
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

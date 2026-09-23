@@ -28,7 +28,7 @@ export default function SignupPage() {
       setError(error.message || "Failed to sign up");
       setIsLoading(false);
     } else {
-      window.location.href = "/verify-email";
+      window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
     }
   };
 
