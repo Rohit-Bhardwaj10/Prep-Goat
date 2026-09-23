@@ -37,7 +37,7 @@ export default function SignupPage() {
     setIsGoogleLoading(true);
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/problems"
+      callbackURL: `${window.location.origin}/problems`
     });
   };
 
