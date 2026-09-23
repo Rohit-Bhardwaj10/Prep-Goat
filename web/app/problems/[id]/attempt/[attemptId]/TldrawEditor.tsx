@@ -123,11 +123,12 @@ export function TldrawEditor({
           setTimeout(() => {
 
             if (disabled) {
-              try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (_) {}
+               try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (_) {}
             }
           }, 100);
         }}
         hideUi={disabled}
+        licenseKey={process.env.NEXT_PUBLIC_TLDRAW_LICENSE_KEY}
       />
       {disabled && (
         <div className="absolute inset-0 bg-transparent cursor-not-allowed pointer-events-none" />

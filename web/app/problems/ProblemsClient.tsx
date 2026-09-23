@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FileText, Search } from 'lucide-react';
+import { FileText, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 interface Problem {
   id: string;
@@ -18,6 +18,13 @@ interface Problem {
   constraints?: string[];
 }
 
+interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 const DIFFICULTY_TAGS = ['All', 'EASY', 'MEDIUM', 'HARD'];
 const TYPE_TAGS = ['All', 'LLD', 'HLD'];
 
@@ -27,32 +34,62 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   HARD: 'text-red-400 border-red-400/30 bg-red-400/10',
 };
 
-export default function ProblemsClient({ problems }: { problems: Problem[] }) {
-  const [search, setSearch] = useState('');
-  const [difficultyFilter, setDifficultyFilter] = useState('All');
-  const [typeFilter, setTypeFilter] = useState('All');
-  const { data: session, isPending } = authClient.useSession();
+export default function ProblemsClient({ problems, initialPagination }: { problems: Problem[], initialPagination: Pagination }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [difficultyFilter, setDifficultyFilter] = useState(searchParams.get('difficulty') || 'All');
+  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || 'All');
+  const { data: session, isPending } = authClient.useSession();
 
   const handleSignOut = async () => {
     await authClient.signOut();
     router.push('/login');
   };
 
-  const filtered = useMemo(() => {
-    return problems.filter((p) => {
-      const matchesSearch =
-        p.title.toLowerCase().includes(search.toLowerCase()) ||
-        p.description.toLowerCase().includes(search.toLowerCase());
-      
-      const probDiff = p.difficulty || 'MEDIUM';
-      const probType = p.type || 'LLD';
-      
-      const matchesDiff = difficultyFilter === 'All' || probDiff === difficultyFilter;
-      const matchesType = typeFilter === 'All' || probType === typeFilter;
-      return matchesSearch && matchesDiff && matchesType;
+  const updateURL = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === '' || value === 'All') {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
     });
-  }, [problems, search, difficultyFilter, typeFilter]);
+    // Reset to page 1 if changing filters (unless page is explicitly updated)
+    if (updates.page === undefined) {
+      params.delete('page');
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  }, [searchParams, pathname, router]);
+
+  // Debounced search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search !== (searchParams.get('search') || '')) {
+        updateURL({ search });
+      }
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [search, searchParams, updateURL]);
+
+  const handleDifficultyChange = (val: string) => {
+    setDifficultyFilter(val);
+    updateURL({ difficulty: val });
+  };
+
+  const handleTypeChange = (val: string) => {
+    setTypeFilter(val);
+    updateURL({ type: val });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= initialPagination.totalPages) {
+      updateURL({ page: newPage.toString() });
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a0a0a] font-sans text-white selection:bg-white/20">
@@ -141,7 +178,7 @@ export default function ProblemsClient({ problems }: { problems: Problem[] }) {
               {TYPE_TAGS.map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => setTypeFilter(tag)}
+                  onClick={() => handleTypeChange(tag)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${
                     typeFilter === tag
                       ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
@@ -157,7 +194,7 @@ export default function ProblemsClient({ problems }: { problems: Problem[] }) {
               {DIFFICULTY_TAGS.map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => setDifficultyFilter(tag)}
+                  onClick={() => handleDifficultyChange(tag)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${
                     difficultyFilter === tag
                       ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
@@ -175,10 +212,10 @@ export default function ProblemsClient({ problems }: { problems: Problem[] }) {
       {/* Problem List */}
       <main className="flex-1 w-full max-w-5xl mx-auto pt-8 pb-12 px-6">
         <p className="text-xs text-white/40 font-mono mb-4 uppercase tracking-widest">
-          {filtered.length} problem{filtered.length !== 1 ? 's' : ''} found
+          {initialPagination.total} problem{initialPagination.total !== 1 ? 's' : ''} found
         </p>
 
-        {filtered.length === 0 ? (
+        {problems.length === 0 ? (
           <div className="border border-white/10 bg-[#0a0a0a] rounded-xl p-12 text-center">
             <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 border border-white/10">
               <FileText className="w-5 h-5 text-white/40" />
@@ -198,7 +235,7 @@ export default function ProblemsClient({ problems }: { problems: Problem[] }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {filtered.map((problem, idx) => {
+                {problems.map((problem, idx) => {
                   const diff = problem.difficulty || 'MEDIUM';
                   const pType = problem.type || 'LLD';
                   return (
@@ -251,6 +288,33 @@ export default function ProblemsClient({ problems }: { problems: Problem[] }) {
                 })}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {initialPagination.totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
+            <span className="text-xs text-white/40 font-mono uppercase tracking-wider">
+              Page {initialPagination.page} of {initialPagination.totalPages}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handlePageChange(initialPagination.page - 1)}
+                disabled={initialPagination.page <= 1}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Prev
+              </button>
+              <button
+                onClick={() => handlePageChange(initialPagination.page + 1)}
+                disabled={initialPagination.page >= initialPagination.totalPages}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         )}
       </main>

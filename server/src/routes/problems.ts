@@ -3,24 +3,64 @@ import { prisma } from '../auth';
 
 const router = Router();
 
-// GET /api/problems — list all problems
+// GET /api/problems — list all problems with pagination and filtering
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const problems = await prisma.problem.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        type: true,
-        difficulty: true,
-        tags: true,
-        requirements: true,
-        constraints: true,
-        createdAt: true,
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = req.query.search as string;
+    const difficulty = req.query.difficulty as string;
+    const type = req.query.type as string;
+
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    
+    if (difficulty && difficulty !== 'All') {
+      where.difficulty = difficulty;
+    }
+    
+    if (type && type !== 'All') {
+      where.type = type;
+    }
+
+    const [problems, total] = await Promise.all([
+      prisma.problem.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          type: true,
+          difficulty: true,
+          tags: true,
+          requirements: true,
+          constraints: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'asc' },
+        skip,
+        take: limit,
+      }),
+      prisma.problem.count({ where }),
+    ]);
+
+    res.json({
+      problems,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-      orderBy: { createdAt: 'asc' },
     });
-    res.json({ problems });
   } catch (err) {
     console.error('[GET /api/problems]', err);
     res.status(500).json({ error: 'Failed to fetch problems' });
