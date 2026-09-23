@@ -23,6 +23,7 @@ export default function SignupPage() {
       email,
       password,
       name,
+      callbackURL: `${window.location.origin}/problems`,
     });
     if (error) {
       setError(error.message || "Failed to sign up");

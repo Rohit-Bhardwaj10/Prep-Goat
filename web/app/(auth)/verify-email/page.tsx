@@ -37,7 +37,7 @@ function VerifyEmailContent() {
 
     const { error } = await authClient.sendVerificationEmail({
       email: emailInput,
-      callbackURL: "/problems", // Where they should go after verifying
+      callbackURL: `${window.location.origin}/problems`,
     });
 
     if (error) {
