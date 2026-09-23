@@ -81,7 +81,7 @@ export function TldrawEditor({
     // Small delay to let the browser repaint after visibility change
     const t = setTimeout(() => {
       try {
-        editor.resize();
+        editor.updateViewportScreenBounds();
       } catch (_) {}
       try {
         if (disabled) editor.zoomToFit({ animation: { duration: 0 } });
@@ -124,7 +124,7 @@ export function TldrawEditor({
           }
           // Zoom after a short delay to let layout settle
           setTimeout(() => {
-            try { editor.resize(); } catch (_) {}
+            try { editor.updateViewportScreenBounds(); } catch (_) {}
             if (disabled) {
               try { editor.zoomToFit({ animation: { duration: 0 } }); } catch (_) {}
             }
