@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2, TrendingUp, Lightbulb, CheckCircle2, Activity } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 
 interface Stats {
   totalAttempts: number;

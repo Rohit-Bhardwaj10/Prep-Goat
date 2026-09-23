@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { Tldraw, getSnapshot, loadSnapshot, TLStoreWithStatus } from '@tldraw/tldraw';
 import '@tldraw/tldraw/tldraw.css';
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 const DEBOUNCE_MS = 2000;
 
 interface TldrawEditorProps {

@@ -23,7 +23,7 @@ const TldrawEditor = dynamic(
   { ssr: false, loading: () => <div className="flex-1 flex items-center justify-center bg-[#111] text-white/30 text-sm font-mono">Loading canvas…</div> }
 );
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 const AUTO_SAVE_INTERVAL = 30_000;
 
 interface Stage {

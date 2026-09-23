@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Lightbulb, Unlock, Loader2 } from 'lucide-react';
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 
 interface HintPanelProps {
   attemptId: string;

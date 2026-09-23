@@ -13,7 +13,7 @@ import { HintPanel } from './HintPanel';
 import { CheatsheetPanel } from './CheatsheetPanel';
 import { ScoreCard } from './ScoreCard';
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 const AUTO_SAVE_INTERVAL = 30_000;
 
 interface Stage {

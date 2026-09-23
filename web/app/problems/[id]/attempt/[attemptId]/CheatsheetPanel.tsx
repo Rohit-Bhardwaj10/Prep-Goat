@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { BookOpen, Loader2 } from 'lucide-react';
 import type { LearningPath } from '../../../../resources/page';
 
-const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 
 export function CheatsheetPanel() {
   const [paths, setPaths] = useState<LearningPath[]>([]);
