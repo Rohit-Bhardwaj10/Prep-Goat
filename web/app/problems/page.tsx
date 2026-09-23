@@ -44,7 +44,8 @@ async function getProblems(searchParams: { [key: string]: string | string[] | un
   }
 }
 
-export default async function ProblemsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+export default async function ProblemsPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
   const { problems, pagination } = await getProblems(searchParams);
   return <ProblemsClient problems={problems} initialPagination={pagination} />;
 }
