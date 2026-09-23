@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PREP — Low-Level Design Practice",
+  title: "PREPG — System Design Practice",
   description: "Practice canonical system design problems with AI-powered feedback.",
   icons: {
     icon: "/favicon.svg",

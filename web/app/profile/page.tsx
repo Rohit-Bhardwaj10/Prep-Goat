@@ -1,7 +1,7 @@
 import { ProfileClient } from './ProfileClient';
 
 export const metadata = {
-  title: 'Profile — PREP',
+  title: 'Profile - PREP-G',
   description: 'Your LLD practice progress, stats, and activity.',
 };
 

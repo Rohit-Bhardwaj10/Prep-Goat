@@ -26,7 +26,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-bold tracking-widest text-[13px] text-white">PREP</span>
+          <span className="font-bold tracking-widest text-[13px] text-white">PREP-G</span>
         </div>
       </div>
 

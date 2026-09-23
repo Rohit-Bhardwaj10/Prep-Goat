@@ -212,8 +212,8 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
         if (data.attempt.evaluation) {
           setEvaluation(data.attempt.evaluation.results);
         }
-        if (data.attempt.problem?.sampleSolution) {
-          setSampleSolution(data.attempt.problem.sampleSolution);
+        if (problem.sampleSolution) {
+          setSampleSolution(problem.sampleSolution);
         }
       })
       .catch(console.error)
@@ -292,8 +292,10 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
         // Re-fetch to get sampleSolution now that status is COMPLETED
         const fresh = await fetch(`${SERVER}/api/attempts/${attemptId}`, { credentials: 'include' });
         const freshData = await fresh.json();
-        if (freshData.attempt?.problem?.sampleSolution) {
-          setSampleSolution(freshData.attempt.problem.sampleSolution);
+        if (freshData.attempt?.evaluation?.problem?.sampleSolution) {
+          setSampleSolution(freshData.attempt.evaluation.problem.sampleSolution);
+        } else if (problem.sampleSolution) {
+          setSampleSolution(problem.sampleSolution);
         }
       }
     } catch (err) {
@@ -501,13 +503,13 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
               </div>
             )}
 
-            {problem.testCases?.length > 0 && (
+            {(problem.testCases?.length ?? 0) > 0 && (
               <div className="text-left">
                 <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3 font-mono">
                   Test Cases
                 </h3>
                 <ul className="space-y-3">
-                  {problem.testCases.map((tc, i) => (
+                  {problem.testCases!.map((tc, i) => (
                     <li key={i} className="flex gap-3 text-sm text-white/70">
                       <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
                       <span className="leading-relaxed">{tc}</span>
@@ -517,13 +519,13 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
               </div>
             )}
 
-            {problem.extensibilityHooks?.length > 0 && (
+            {(problem.extensibilityHooks?.length ?? 0) > 0 && (
               <div className="text-left">
                 <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3 font-mono">
                   Extensibility Scenarios
                 </h3>
                 <ul className="space-y-3">
-                  {problem.extensibilityHooks.map((h, i) => (
+                  {problem.extensibilityHooks!.map((h, i) => (
                     <li key={i} className="flex gap-3 text-sm text-white/70">
                       <span className="text-[#ff6b35] font-bold shrink-0">{i + 1}.</span>
                       <span className="leading-relaxed">{h}</span>

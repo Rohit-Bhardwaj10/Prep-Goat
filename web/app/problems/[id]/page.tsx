@@ -4,6 +4,7 @@ import { ProblemDetailClient } from './ProblemDetailClient';
 
 interface Problem {
   id: string;
+  type: 'HLD' | 'LLD';
   title: string;
   description: string;
   requirements: string[];

@@ -44,7 +44,7 @@ export default function LoginPage() {
             <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center border border-white/10">
               <Code2 className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold tracking-tight text-lg">PREP</span>
+            <span className="font-bold tracking-tight text-lg">PREP-G</span>
           </Link>
         </div>
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
               <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center border border-white/10">
                 <Code2 className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold tracking-tight text-lg">PREP</span>
+              <span className="font-bold tracking-tight text-lg">PREP-G</span>
             </Link>
           </div>
 
