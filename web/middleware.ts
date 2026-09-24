@@ -2,10 +2,18 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const isProblemListOrDetail = pathname === '/problems' || /^\/problems\/[^/]+$/.test(pathname);
+
   const sessionToken = request.cookies.get("better-auth.session_token") || request.cookies.get("__Secure-better-auth.session_token");
   
   if (!sessionToken) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    if (isProblemListOrDetail) {
+      return NextResponse.next();
+    }
+    const redirectUrl = new URL('/login', request.url);
+    redirectUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(redirectUrl);
   }
   
   try {
