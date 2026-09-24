@@ -82,20 +82,20 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
             <div className="flex items-center gap-8 border-b border-white/10 mb-8 shrink-0 overflow-x-auto custom-scrollbar whitespace-nowrap pb-1">
               <button 
                 onClick={() => setActiveTab('requirements')}
-                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'requirements' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'requirements' ? 'border-[#a3b18a] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
               >
                 Functional Requirements
               </button>
               <button 
                 onClick={() => setActiveTab('constraints')}
-                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'constraints' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+                className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'constraints' ? 'border-[#a3b18a] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
               >
                 Constraints & Notes
               </button>
               {problem.testCases && problem.testCases.length > 0 && (
                 <button 
                   onClick={() => setActiveTab('testCases')}
-                  className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'testCases' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+                  className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'testCases' ? 'border-[#a3b18a] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
                 >
                   Test Cases
                 </button>
@@ -103,7 +103,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
               {problem.extensibilityHooks && problem.extensibilityHooks.length > 0 && (
                 <button 
                   onClick={() => setActiveTab('extensibility')}
-                  className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'extensibility' ? 'border-[#ff6b35] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
+                  className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'extensibility' ? 'border-[#a3b18a] text-white' : 'border-transparent text-white/40 hover:text-white/70'}`}
                 >
                   Extensibility Scenarios
                 </button>
@@ -116,7 +116,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                 <ul className="space-y-6 text-white/80 text-base max-w-3xl">
                   {problem.requirements?.map((req, i) => (
                     <li key={i} className="flex gap-5 leading-relaxed group">
-                      <span className="font-mono text-sm text-white/30 mt-0.5 font-bold shrink-0 group-hover:text-[#ff6b35] transition-colors">
+                      <span className="font-mono text-sm text-white/30 mt-0.5 font-bold shrink-0 group-hover:text-[#a3b18a] transition-colors">
                         {(i + 1).toString().padStart(2, '0')}
                       </span>
                       <span>{req}</span>
@@ -129,7 +129,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                 <ul className="space-y-6 text-white/80 text-base max-w-3xl">
                   {problem.constraints?.map((c, i) => (
                     <li key={i} className="flex gap-5 leading-relaxed items-start">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35] mt-2.5 shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#a3b18a] mt-2.5 shrink-0" />
                       <span>{c}</span>
                     </li>
                   ))}
@@ -221,7 +221,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                         className="block p-4 rounded-xl border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all cursor-pointer"
                       >
                         <div className="flex items-baseline justify-between mb-2">
-                          <span className="font-medium text-white group-hover:text-[#ff6b35] transition-colors">
+                          <span className="font-medium text-white group-hover:text-[#a3b18a] transition-colors">
                             {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                           {attempt.totalScore !== null && (
@@ -233,7 +233,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                         <div className="text-xs text-white/50 flex items-center gap-2">
                           <span>{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
                           <span className="w-1 h-1 rounded-full bg-white/30" />
-                          <span className="text-[#ff6b35] font-medium tracking-wide uppercase text-[10px]">
+                          <span className="text-[#a3b18a] font-medium tracking-wide uppercase text-[10px]">
                             Completed
                           </span>
                         </div>
