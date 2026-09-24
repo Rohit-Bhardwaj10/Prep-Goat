@@ -107,22 +107,22 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-[#0a0a0a]" />
 
         {/* ── Navbar row ── */}
-        <div className="absolute top-0 left-0 right-0 z-20 px-8 md:px-12 py-6 flex items-center justify-between">
-          {/* Logo container matching the right pill */}
-          <div className="bg-black/40 backdrop-blur-md border border-white/10 p-1 flex items-center">
-            <Link href="/" className="flex items-center gap-3 px-5 py-2 hover:opacity-80 transition-opacity">
-              <div className="w-4 h-4 flex items-center justify-center">
+        <div className="absolute top-0 left-0 right-0 z-20 px-8 md:px-12 py-8 flex items-center justify-between">
+          {/* Logo — same as hero */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-6 h-6 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
                   <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <circle cx="12" cy="13" r="2.5" fill="currentColor" />
                 </svg>
               </div>
-              <span className="font-bold tracking-widest text-[13px] text-white">PREP-G</span>
+              <span className="font-bold tracking-widest text-base text-white">PREP-G</span>
             </Link>
           </div>
 
-          {/* Nav pill */}
-          <nav className="hidden md:flex items-center bg-black/40 backdrop-blur-md border border-white/10 p-1 text-[13px] font-medium text-white/70">
+          {/* Nav pill — same as hero */}
+          <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
             <Link href="/problems" className="px-5 py-2 text-white bg-white/10 transition-colors">
               Platform
             </Link>
