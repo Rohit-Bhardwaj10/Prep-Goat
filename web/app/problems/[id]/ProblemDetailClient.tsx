@@ -2,9 +2,11 @@
 
 import { useState, useTransition, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Loader2, Lock } from 'lucide-react';
 import { startAttempt } from './actions';
 import { Navbar } from '@/components/Navbar';
+import { authClient } from '@/lib/auth-client';
 
 interface Problem {
   id: string;
@@ -27,6 +29,8 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
   const [attempts, setAttempts] = useState<any[]>(initialAttempts);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [activeTab, setActiveTab] = useState<'requirements' | 'constraints' | 'testCases' | 'extensibility'>('requirements');
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
+  const router = useRouter();
 
   useEffect(() => {
     fetch(`/api/attempts?problemId=${problem.id}`, {
@@ -161,23 +165,33 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
           {/* Bottom: Action Button */}
           <div className="shrink-0 pt-6 border-t border-white/10 flex justify-between items-center">
             <p className="text-sm text-white/50">Ready to build? Show off your system design skills.</p>
-            <button
-              onClick={() => startTransition(() => startAttempt(problem.id))}
-              disabled={isPending}
-              className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-[#2a2a2a] hover:bg-[#333] border border-white/5 text-white/90 font-medium text-base transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 group"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Initializing Environment...
-                </>
-              ) : (
-                <>
-                  Start Design Attempt
-                  <ArrowLeft className="w-4 h-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
+            {!isSessionPending && !session ? (
+              <Link
+                href={`/login?redirect=/problems/${problem.id}`}
+                className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white font-medium text-base transition-all group"
+              >
+                <Lock className="w-4 h-4 mr-2 opacity-60" />
+                Sign in to Start
+              </Link>
+            ) : (
+              <button
+                onClick={() => startTransition(() => startAttempt(problem.id))}
+                disabled={isPending || isSessionPending}
+                className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-[#2a2a2a] hover:bg-[#333] border border-white/5 text-white/90 font-medium text-base transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 group"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    Initializing Environment...
+                  </>
+                ) : (
+                  <>
+                    Start Design Attempt
+                    <ArrowLeft className="w-4 h-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
 

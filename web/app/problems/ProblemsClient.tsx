@@ -276,12 +276,21 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                         </span>
                       </td>
                       <td className="py-5 px-6 text-right align-middle">
-                        <Link
-                          href={`/problems/${problem.id}`}
-                          className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-[#2a2a2a] hover:bg-[#ff6b35] border border-white/5 hover:border-[#ff6b35] text-white/90 font-semibold text-xs transition-all"
-                        >
-                          Solve
-                        </Link>
+                        {session ? (
+                          <Link
+                            href={`/problems/${problem.id}`}
+                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-[#2a2a2a] hover:bg-[#ff6b35] border border-white/5 hover:border-[#ff6b35] text-white/90 font-semibold text-xs transition-all"
+                          >
+                            Solve
+                          </Link>
+                        ) : (
+                          <Link
+                            href={`/login?redirect=/problems/${problem.id}`}
+                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white font-semibold text-xs transition-all"
+                          >
+                            Sign in to Solve
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   );
