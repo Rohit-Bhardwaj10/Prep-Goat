@@ -16,8 +16,8 @@ export default function Home() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/Image(2).png" 
-          alt="Desert dune background" 
+          src="/Image(5).png" 
+          alt="Background" 
           fill
           priority
           className="object-cover object-center"
@@ -35,7 +35,7 @@ export default function Home() {
             Find clarity in complex system design
           </h1>
           <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-xl pr-12 font-medium" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
-            Turn scattered concepts, patterns, and trade-offs into one clear strategic architecture for your next technical interview.
+            Master system design patterns and ace your technical interview.
           </p>
           <div className="pt-4">
              <Link 
