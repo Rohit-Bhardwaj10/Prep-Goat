@@ -15,17 +15,17 @@ export function Navbar() {
 
   return (
     <header className="relative z-50 w-full px-8 md:px-12 py-8 flex items-center justify-between pointer-events-auto">
-      {/* Logo container matching the right pill */}
-      <div className="bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 flex items-center">
-        <Link href="/" className="flex items-center gap-3 px-5 py-2 hover:opacity-80 transition-opacity">
+      {/* Logo container */}
+      <div className="flex items-center">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           {/* Logo icon imitating the orange triangle */}
-          <div className="w-4 h-4 flex items-center justify-center">
+          <div className="w-6 h-6 flex items-center justify-center">
             <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
               <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-bold tracking-widest text-[13px] text-white">PREP-G</span>
+          <span className="font-bold tracking-widest text-base text-white">PREP-G</span>
         </Link>
       </div>
       

@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Code2, ArrowRight, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -41,19 +42,19 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex bg-[#0a0a0a] font-sans text-white selection:bg-white/20">
       {/* Left side - Visual/Brand */}
-      <div className="hidden lg:flex w-1/2 bg-[#0a0a0a] p-12 flex-col relative overflow-hidden border-r border-white/10">
-        <div className="absolute inset-0 opacity-10" 
-             style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-        
-        {/* Subtle glow */}
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-[#ff6b35]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden lg:flex w-1/2 p-12 flex-col relative overflow-hidden border-r border-white/10">
+        <Image src="/Image(6).png" alt="Background" fill priority className="object-cover object-center z-0" />
+        <div className="absolute inset-0 bg-black/60 z-0" />
 
         <div className="relative z-10 flex-none">
-          <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity w-fit">
-            <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center border border-white/10">
-              <Code2 className="w-4 h-4 text-white" />
+          <Link href="/" className="flex items-center gap-3 text-white hover:opacity-80 transition-opacity w-fit">
+            <div className="w-6 h-6 flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
+                <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="12" cy="13" r="2.5" fill="currentColor" />
+              </svg>
             </div>
-            <span className="font-bold tracking-tight text-lg">PREP-G</span>
+            <span className="font-bold tracking-widest text-base">PREP-G</span>
           </Link>
         </div>
 
@@ -68,15 +69,15 @@ export default function LoginPage() {
             
             <div className="flex flex-col gap-4 border-t border-white/10 pt-8 mt-8">
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
                 <span className="text-sm">Canonical system design problems</span>
               </div>
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
                 <span className="text-sm">Distraction-free markdown editor</span>
               </div>
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
                 <span className="text-sm">Instant, criterion-based AI feedback</span>
               </div>
             </div>
@@ -85,16 +86,19 @@ export default function LoginPage() {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 relative z-10 bg-[#0a0a0a]">
+      <div className="flex-1 flex items-center justify-center p-8 relative z-10 bg-black/20 backdrop-blur-md">
         <div className="w-full max-w-sm space-y-8">
           
           {/* Mobile Header */}
           <div className="lg:hidden flex justify-center mb-12">
-            <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center border border-white/10">
-                <Code2 className="w-4 h-4 text-white" />
+            <Link href="/" className="flex items-center gap-3 text-white hover:opacity-80 transition-opacity">
+              <div className="w-6 h-6 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
+                  <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="13" r="2.5" fill="currentColor" />
+                </svg>
               </div>
-              <span className="font-bold tracking-tight text-lg">PREP-G</span>
+              <span className="font-bold tracking-widest text-base">PREP-G</span>
             </Link>
           </div>
 
@@ -116,7 +120,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1a1a1a] rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
+                className="w-full px-4 py-2.5 bg-white/5 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
                 placeholder="you@example.com"
                 required
               />
@@ -130,7 +134,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1a1a1a] rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all shadow-sm text-white placeholder:text-white/30"
+                className="w-full px-4 py-2.5 bg-white/5 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm text-white placeholder:text-white/30"
                 placeholder="••••••••"
                 required
               />
@@ -139,7 +143,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading || isGoogleLoading}
-              className="w-full py-2.5 bg-[#ff6b35] text-white font-medium rounded-lg hover:bg-[#e05a2a] transition-all shadow-sm flex items-center justify-center gap-2 group disabled:opacity-70 mt-4"
+              className="w-full py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-medium rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 group disabled:opacity-70 mt-4"
             >
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               Sign In
@@ -171,7 +175,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-white/50">
             Don't have an account?{" "}
-            <Link href="/signup" className="font-semibold text-white hover:text-[#ff6b35] transition-colors">
+            <Link href="/signup" className="font-semibold text-white hover:text-white/80 transition-colors">
               Create one
             </Link>
           </p>
