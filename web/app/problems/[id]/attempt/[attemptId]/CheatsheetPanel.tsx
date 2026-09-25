@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Loader2 } from 'lucide-react';
-import type { LearningPath } from '../../../../resources/page';
+
+
+interface ResourceItem { id: string; slug: string; title: string; }
+interface LearningPathItem { id: string; order: number; resource: ResourceItem; }
+interface LearningPath { id: string; title: string; description: string; items: LearningPathItem[]; }
 
 const SERVER = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000');
 
@@ -51,7 +55,7 @@ export function CheatsheetPanel() {
           <div key={path.id}>
             <h4 className="text-xs font-semibold text-white/70 mb-2">{path.title}</h4>
             <ul className="space-y-2">
-              {path.items.map(item => (
+              {path.items.map((item: LearningPathItem) => (
                 <li key={item.id}>
                   <Link 
                     href={`/resources/cheatsheets/${item.resource.slug}`}
