@@ -1,6 +1,6 @@
-# Prep-Goat (Oh-My-SD)
+# Prep-Goat 
 
-**Prep-Goat** (internally known as *Oh-My-SD*) is an AI-powered platform for practicing and evaluating Software Design. It covers both **Low-Level Design (LLD)** and **High-Level Design (HLD)**, featuring an interactive editor, real-time AI evaluations using Groq, and a progress tracking dashboard.
+**Prep-Goat** is an LLM-powered platform for practicing and evaluating Software Design. It covers both **Low-Level Design (LLD)** and **High-Level Design (HLD)**, featuring an interactive editor, real-time AI evaluations , and a progress tracking dashboard.
 
 ---
 
@@ -8,7 +8,7 @@
 
 - **High-Level Design (HLD) Track**: Integrated with `tldraw` for canvas-based, rich architecture design practice.
 - **Low-Level Design (LLD) Track**: Text-based code editor with syntax highlighting for object-oriented design and algorithm implementation.
-- **AI-Powered Evaluation**: Automated grading using `Groq` LLM to evaluate SOLID principles, architecture choices, extensibility hooks, and test cases.
+- **AI-Powered Evaluation**: Automated grading using LLM to evaluate SOLID principles, architecture choices, extensibility hooks, and test cases.
 - **Detailed Feedback & Scorecards**: Radar charts breaking down your performance across various evaluation criteria (e.g., Scalability, Readability).
 - **Hints & Sample Solutions**: A penalty-based hint system and high-quality, manually authored sample solutions that unlock post-submission.
 - **DB-Driven Learning**: A rich set of problems with constraints, learning resources, and integrated cheatsheets.
@@ -34,7 +34,7 @@ The project follows a vertical slice architecture and is split into three main a
 Ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (v20+)
 - PostgreSQL (or a Neon DB URL)
-- A Groq API Key
+- A LLM API Key
 - Google OAuth credentials (for authentication)
 
 ### Installation
@@ -53,7 +53,7 @@ Ensure you have the following installed:
    Create a `.env` file in the `server` directory:
    ```env
    DATABASE_URL="postgresql://..."
-   GROQ_API_KEY="your_groq_api_key"
+   LLM_API_KEY="your_llm_api_key"
    GOOGLE_CLIENT_ID="your_google_client_id"
    GOOGLE_CLIENT_SECRET="your_google_client_secret"
    RESEND_API_KEY="your_resend_api_key"
@@ -96,7 +96,6 @@ Ensure you have the following installed:
 - `/web` - The Next.js frontend application facing the users.
 - `/server` - The Express backend serving API routes and handling LLM evaluation logic.
 - `/cms` - An internal content management dashboard.
-- `task.md` & `plan.md` - Technical implementation details and vertical slice breakdown.
 
 ## Contributing
 
