@@ -21,18 +21,18 @@ export function Navbar() {
           {/* Logo icon imitating the orange triangle */}
           <div className="w-6 h-6 flex items-center justify-center">
             <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
-              <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
           </div>
           <span className="font-bold tracking-widest text-base text-white">PREP-G</span>
         </Link>
       </div>
-      
+
       {/* Navigation pill */}
       <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
         <Link href="/problems" className="px-5 py-2 hover:text-white transition-colors">
-          Platform
+          Problems
         </Link>
         <Link href="/resources" className="px-5 py-2 hover:text-white transition-colors">
           Resources

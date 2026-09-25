@@ -7,7 +7,7 @@ export function Layout() {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Problems', path: '/problems', icon: Database },
-    { name: 'Resources', path: '/resources', icon: BookOpen },
+    // { name: 'Resources', path: '/resources', icon: BookOpen },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
@@ -28,11 +28,10 @@ export function Layout() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive 
-                    ? 'bg-zinc-800 text-white' 
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
+                    ? 'bg-zinc-800 text-white'
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4 mr-3" />
                 {item.name}
