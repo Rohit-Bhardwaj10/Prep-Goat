@@ -26,9 +26,7 @@ export async function middleware(request: NextRequest) {
     
     if (res.ok) {
       const session = await res.json();
-      if (session?.user && session.user.emailVerified === false) {
-        return NextResponse.redirect(new URL('/verify-email', request.url));
-      }
+      // Email verification disabled, no redirect needed
     }
   } catch (error) {
     console.error("Middleware session check failed", error);
