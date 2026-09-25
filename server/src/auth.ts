@@ -3,10 +3,16 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import "dotenv/config";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 const adapter = new PrismaPg(pool);
@@ -67,8 +73,8 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await resend.emails.send({
-        from: "PrepGoat <onboarding@resend.dev>",
+      await transporter.sendMail({
+        from: `"PrepGoat" <${process.env.EMAIL_USER}>`,
         to: user.email,
         subject: "Verify your email address - PrepGoat",
         html: `<p>Click the link below to verify your email address:</p><p><a href="${url}">Verify Email</a></p>`,

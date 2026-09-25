@@ -56,7 +56,8 @@ Ensure you have the following installed:
    LLM_API_KEY="your_llm_api_key"
    GOOGLE_CLIENT_ID="your_google_client_id"
    GOOGLE_CLIENT_SECRET="your_google_client_secret"
-   RESEND_API_KEY="your_resend_api_key"
+   EMAIL_USER="your_gmail_address@gmail.com"
+   EMAIL_PASS="your_gmail_app_password"
    ```
    Run database migrations and seed data:
    ```bash
