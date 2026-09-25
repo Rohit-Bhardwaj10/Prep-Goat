@@ -12,6 +12,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "@tldraw/tldraw": "^5.4.2",
     "better-auth": "^1.7.3",
+    "framer-motion": "^13.4.4",
     "lucide-react": "^1.43.0",
     "next": "16.3.4",
     "posthog-js": "^1.434.11",

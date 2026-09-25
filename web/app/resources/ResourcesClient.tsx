@@ -143,7 +143,7 @@ const RESOURCES: ResourceEntry[] = [
 const CATEGORIES: Category[] = ['All', 'HLD', 'LLD', 'Networking', 'Databases', 'Videos'];
 
 const TYPE_META: Record<ContentType, { label: string; color: string; Icon: typeof BookOpen }> = {
-  original: { label: 'Original', color: 'text-[#a3b18a] border-[#a3b18a]/30 bg-[#a3b18a]/8', Icon: BookOpen },
+  original: { label: 'Original', color: 'text-[#ff6b35] border-[#ff6b35]/30 bg-[#ff6b35]/8', Icon: BookOpen },
   link: { label: 'Article', color: 'text-white/50 border-white/10 bg-white/5', Icon: ExternalLink },
   video: { label: 'Video', color: 'text-red-400/80 border-red-400/20 bg-red-400/5', Icon: Play },
 };
@@ -173,7 +173,7 @@ export default function ResourcesClient() {
       <header className="relative z-50 w-full px-8 md:px-12 py-8 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-6 h-6 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#a3b18a]">
+            <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
               <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
@@ -201,7 +201,7 @@ export default function ResourcesClient() {
       {/* ── Page Header ────────────────────────────────────── */}
       <main className="flex-1 w-full max-w-4xl mx-auto px-6 pt-12 pb-28">
         <div className="mb-14">
-          <p className="text-[#a3b18a] font-mono text-xs uppercase tracking-[0.3em] mb-4 font-bold">
+          <p className="text-[#ff6b35] font-mono text-xs uppercase tracking-[0.3em] mb-4 font-bold">
             Personal study notes
           </p>
           <h1 className="text-4xl md:text-5xl font-bold font-mono uppercase tracking-tight text-white mb-5">
@@ -221,8 +221,8 @@ export default function ResourcesClient() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`px-4 py-1.5 text-xs font-mono uppercase tracking-widest border transition-all ${activeCategory === cat
-                    ? 'text-white border-white/30 bg-white/10'
-                    : 'text-white/40 border-white/5 bg-transparent hover:text-white/70 hover:border-white/15'
+                  ? 'text-white border-white/30 bg-white/10'
+                  : 'text-white/40 border-white/5 bg-transparent hover:text-white/70 hover:border-white/15'
                   }`}
               >
                 {cat}

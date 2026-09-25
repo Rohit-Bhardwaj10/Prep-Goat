@@ -29,8 +29,8 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
-            <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-[#a3b18a]">
-              <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-[#ff6b35]">
+              <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
             <span className="font-bold tracking-widest text-[12px] text-white">PREP-G</span>
@@ -47,7 +47,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
           {/* Header */}
           <header className="mb-12 pb-10 border-b border-white/5">
             <div className="flex items-center gap-2.5 mb-5">
-              <span className="text-[#a3b18a] text-[10px] font-mono uppercase tracking-[0.25em]">Original</span>
+              <span className="text-[#ff6b35] text-[10px] font-mono uppercase tracking-[0.25em]">Original</span>
               <span className="text-white/15 text-[10px] font-mono">·</span>
               <span className="text-white/30 text-[10px] font-mono uppercase tracking-[0.2em]">{readTime} min read</span>
             </div>
@@ -103,7 +103,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
                       {children}
                     </code>
                   ) : (
-                    <code className="inline-block bg-white/8 px-1.5 py-0.5 font-mono text-[13px] text-[#a3b18a]/90 rounded-none">{children}</code>
+                    <code className="inline-block bg-white/8 px-1.5 py-0.5 font-mono text-[13px] text-[#ff6b35]/90 rounded-none">{children}</code>
                   );
                 },
                 pre: ({ children }) => (
@@ -114,7 +114,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
                 ),
                 hr: () => <div className="my-10 border-t border-white/5" />,
                 a: ({ href, children }) => (
-                  <a href={href} className="text-[#a3b18a]/80 hover:text-[#a3b18a] underline underline-offset-4 decoration-[#a3b18a]/30 transition-colors" target="_blank" rel="noopener noreferrer">
+                  <a href={href} className="text-[#ff6b35]/80 hover:text-[#ff6b35] underline underline-offset-4 decoration-[#ff6b35]/30 transition-colors" target="_blank" rel="noopener noreferrer">
                     {children}
                   </a>
                 ),

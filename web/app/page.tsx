@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { Navbar } from "@/components/Navbar";
+import { ArrowUpRight } from "lucide-react";
+import { Magnetic } from "@/components/Magnetic";
 
 export default function Home() {
   const { data: session } = authClient.useSession();
@@ -16,7 +18,7 @@ export default function Home() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/AI_Bg_029.png"
+          src="/Image(2).png"
           alt="Background"
           fill
           priority
@@ -44,13 +46,26 @@ export default function Home() {
           <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-xl pr-12 font-medium" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
             Master system design patterns and ace your technical interview.
           </p>
-          <div className="pt-4">
-            <Link
-              href={session ? "/problems" : "/signup"}
-              className="inline-flex items-center justify-center px-7 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-sm font-semibold transition-colors border border-white/20"
-            >
-              Start practicing
-            </Link>
+          <div className="pt-4 flex flex-wrap items-center gap-4">
+            <Magnetic>
+              <Link
+                href="/problems"
+                className="inline-flex items-center justify-center px-7 py-3.5 bg-[#1a1a1a]/80 hover:bg-black/90  text-white text-sm font-semibold transition-colors border border-white/10 backdrop-blur-md"
+              >
+                Browse Problems
+              </Link>
+            </Magnetic>
+            {!session && (
+              <Magnetic>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center px-5 py-3 bg-white hover:bg-white/90 text-black text-sm font-semibold transition-colors shadow-lg group"
+                >
+                  Sign in
+                  <ArrowUpRight className="w-4 h-4 ml-1.5 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Link>
+              </Magnetic>
+            )}
           </div>
         </div>
       </main>

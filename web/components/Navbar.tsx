@@ -30,7 +30,7 @@ export function Navbar() {
       </div>
 
       {/* Navigation pill */}
-      <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
+      <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/10 p-1 text-[15px] font-medium text-white/70">
         <Link href="/problems" className="px-5 py-2 hover:text-white transition-colors">
           Problems
         </Link>

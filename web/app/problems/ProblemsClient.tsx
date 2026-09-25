@@ -112,7 +112,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="w-6 h-6 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#a3b18a]">
+                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
                   <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="13" r="2.5" fill="currentColor" />
                 </svg>
@@ -145,7 +145,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
 
         {/* ── Hero Text ── */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-[#a3b18a] font-mono text-xs uppercase tracking-[0.3em] mb-3 font-bold">
+          <p className="text-[#ff6b35] font-mono text-xs uppercase tracking-[0.3em] mb-3 font-bold">
             Practice Platform
           </p>
           <h1 className="text-4xl md:text-6xl font-bold font-mono uppercase tracking-tight text-white drop-shadow-lg">
@@ -168,7 +168,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
               placeholder="Search problems..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#a3b18a] focus:border-transparent transition-all"
+              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all"
             />
           </div>
 
@@ -180,8 +180,8 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                   key={tag}
                   onClick={() => handleTypeChange(tag)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${typeFilter === tag
-                      ? 'bg-[#a3b18a] border-[#a3b18a] text-white'
-                      : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
+                    ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
+                    : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
                     }`}
                 >
                   {tag}
@@ -195,8 +195,8 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                   key={tag}
                   onClick={() => handleDifficultyChange(tag)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${difficultyFilter === tag
-                      ? 'bg-[#a3b18a] border-[#a3b18a] text-white'
-                      : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
+                    ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
+                    : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
                     }`}
                 >
                   {tag}
@@ -243,7 +243,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                     >
                       <td className="py-5 px-6">
                         <Link href={`/problems/${problem.id}`} className="block">
-                          <div className="font-semibold text-base text-white/90 group-hover:text-[#a3b18a] transition-colors flex items-center gap-2">
+                          <div className="font-semibold text-base text-white/90 group-hover:text-[#ff6b35] transition-colors flex items-center gap-2">
                             {problem.title}
                           </div>
                           <div className="text-sm text-white/50 mt-1 line-clamp-1 max-w-lg">
@@ -277,7 +277,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                         {session ? (
                           <Link
                             href={`/problems/${problem.id}`}
-                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-[#2a2a2a] hover:bg-[#a3b18a] border border-white/5 hover:border-[#a3b18a] text-white/90 font-semibold text-xs transition-all"
+                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-[#2a2a2a] hover:bg-[#ff6b35] border border-white/5 hover:border-[#ff6b35] text-white/90 font-semibold text-xs transition-all"
                           >
                             Solve
                           </Link>
