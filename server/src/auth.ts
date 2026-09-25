@@ -3,16 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import nodemailer from "nodemailer";
 import "dotenv/config";
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 const adapter = new PrismaPg(pool);
@@ -61,7 +52,7 @@ export const auth = betterAuth({
   trustedOrigins: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"] : ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
   },
   account: {
     accountLinking: {
@@ -69,16 +60,18 @@ export const auth = betterAuth({
       trustedProviders: ["google"],
     },
   },
-  emailVerification: {
-    sendOnSignUp: true,
-    autoSignInAfterVerification: true,
-    sendVerificationEmail: async ({ user, url }) => {
-      await transporter.sendMail({
-        from: `"PrepGoat" <${process.env.EMAIL_USER}>`,
-        to: user.email,
-        subject: "Verify your email address - PrepGoat",
-        html: `<p>Click the link below to verify your email address:</p><p><a href="${url}">Verify Email</a></p>`,
-      });
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          // Standard email regex validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(user.email)) {
+            throw new Error("Invalid email format");
+          }
+          return { data: user };
+        },
+      },
     },
   },
   socialProviders: {
