@@ -43,9 +43,10 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-mono uppercase text-white leading-[1.1] tracking-tight font-semibold" style={{ textShadow: '0 4px 24px rgba(0,0,0,0.5)' }}>
             Find clarity in complex system design
           </h1>
-          <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-xl pr-12 font-medium" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
-            Master system design patterns and ace your technical interview.
+          <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-2xl pr-12 font-medium" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
+            Your all-in-one destination for mastering System Design. Practice with gold-standard problems, access curated resources, and level up with real-time feedback.
           </p>
+
           <div className="pt-4 flex flex-wrap items-center gap-4">
             <Magnetic>
               <Link

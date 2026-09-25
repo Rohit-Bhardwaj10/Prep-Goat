@@ -50,7 +50,7 @@ export default function LoginPage() {
           <Link href="/" className="flex items-center gap-3 text-white hover:opacity-80 transition-opacity w-fit">
             <div className="w-6 h-6 flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
-                <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 <circle cx="12" cy="13" r="2.5" fill="currentColor" />
               </svg>
             </div>
@@ -66,7 +66,7 @@ export default function LoginPage() {
             <p className="text-white/50 text-lg leading-relaxed mb-8">
               Join the platform built for serious software engineers to master low-level design and system architecture.
             </p>
-            
+
             <div className="flex flex-col gap-4 border-t border-white/10 pt-8 mt-8">
               <div className="flex items-center gap-3 text-white/70">
                 <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
@@ -88,13 +88,13 @@ export default function LoginPage() {
       {/* Right side - Form */}
       <div className="flex-1 flex items-center justify-center p-8 relative z-10 bg-black/20 backdrop-blur-md">
         <div className="w-full max-w-sm space-y-8">
-          
+
           {/* Mobile Header */}
           <div className="lg:hidden flex justify-center mb-12">
             <Link href="/" className="flex items-center gap-3 text-white hover:opacity-80 transition-opacity">
               <div className="w-6 h-6 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
-                  <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="13" r="2.5" fill="currentColor" />
                 </svg>
               </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-            
+
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-white/70">Email address</label>
               <input
