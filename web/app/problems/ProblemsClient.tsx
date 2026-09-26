@@ -93,9 +93,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20 relative" style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(255,107,53,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(255,107,53,0.04) 0%, transparent 50%)' }}>
-      {/* Dot grid overlay */}
-      <div className="pointer-events-none absolute inset-0 z-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20">
       <Navbar />
 
       {/* Hero Section */}
@@ -119,7 +117,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 pb-20">
         
         {/* Search + Filter Bar */}
-        <div className="bg-[#141414] border border-white/5 rounded-xl p-4 mb-6 shadow-lg">
+        <div className="bg-[#141414] border border-white/5 rounded-xl p-4 mb-6">
           <div className="flex items-center border-b border-white/5 pb-4 mb-4">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -128,7 +126,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                 placeholder="Search problems..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#ff6b35] transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#ff6b35] transition-all"
               />
             </div>
           </div>
