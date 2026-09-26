@@ -188,7 +188,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
   const [submitting, setSubmitting] = useState(false);
   const [evaluation, setEvaluation] = useState<any>(null);
   const [attemptStatus, setAttemptStatus] = useState<string>('DRAFT');
-  const [sidebarWidth, setSidebarWidth] = useState(500); // Resizable sidebar width
+  const [sidebarWidth, setSidebarWidth] = useState(620); // Resizable sidebar width
   const [isPending, startTransition] = useTransition();
   const [resultTab, setResultTab] = useState<'evaluation' | 'scorecard' | 'solution' | 'submission'>('scorecard');
   const [sampleSolution, setSampleSolution] = useState<string | null>(null);
@@ -419,7 +419,7 @@ export function Editor({ attemptId, problemId, problem }: EditorProps) {
       <div className="flex flex-1 overflow-hidden">
 
         {/* LEFT SIDEBAR — Problem context */}
-        <aside style={{ width: sidebarWidth }} className="shrink-0 flex flex-col overflow-hidden relative border-r border-white/10 bg-[#0a0a0a]">
+        <aside style={{ width: sidebarWidth }} className="shrink-0 flex flex-col overflow-hidden relative border-r border-white/10 bg-[#111111]">
           
           {/* Top minimal navigation */}
           <div className="flex items-center justify-center gap-4 h-12 border-b border-white/10 shrink-0 bg-white/5">

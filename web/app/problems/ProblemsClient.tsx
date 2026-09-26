@@ -93,7 +93,9 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20">
+    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20 relative" style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(255,107,53,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(255,107,53,0.04) 0%, transparent 50%)' }}>
+      {/* Dot grid overlay */}
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
       <Navbar />
 
       {/* Hero Section */}

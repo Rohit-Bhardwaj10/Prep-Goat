@@ -91,7 +91,7 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
   const [submitting, setSubmitting] = useState(false);
   const [evaluation, setEvaluation] = useState<any>(null);
   const [attemptStatus, setAttemptStatus] = useState<string>('DRAFT');
-  const [sidebarWidth, setSidebarWidth] = useState(440);
+  const [sidebarWidth, setSidebarWidth] = useState(620);
   const [isPending, startTransition] = useTransition();
   const [resultTab, setResultTab] = useState<'evaluation' | 'scorecard' | 'solution' | 'submission'>('scorecard');
   const [sampleSolution, setSampleSolution] = useState<string | null>(null);
@@ -302,7 +302,7 @@ export function HLDEditor({ attemptId, problemId, problem }: HLDEditorProps) {
         {/* LEFT SIDEBAR — Problem context */}
         <aside
           style={{ width: sidebarWidth }}
-          className="shrink-0 flex flex-col overflow-hidden relative border-r border-white/10 bg-[#0a0a0a]"
+          className="shrink-0 flex flex-col overflow-hidden relative border-r border-white/10 bg-[#111111]"
         >
           {/* Stage navigation dots */}
           <div className="flex items-center justify-center gap-4 h-12 border-b border-white/10 shrink-0 bg-white/5">
