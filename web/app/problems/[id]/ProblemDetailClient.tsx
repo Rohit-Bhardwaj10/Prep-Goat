@@ -71,37 +71,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
               {problem.description}
             </p>
           </div>
-          
-          <div className="flex items-center gap-3 mt-6 lg:mt-0 shrink-0">
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-white transition-colors">
-              <Bookmark className="w-3.5 h-3.5" /> Save
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-white transition-colors">
-              <Download className="w-3.5 h-3.5" /> Export
-            </button>
-            {session ? (
-              <button
-                onClick={() => startTransition(() => startAttempt(problem.id))}
-                disabled={isPending || isSessionPending}
-                className="flex items-center gap-2 px-6 py-2.5 rounded bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white text-xs font-mono font-bold uppercase tracking-wider transition-colors disabled:opacity-70"
-              >
-                {isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Play className="w-4 h-4 fill-current" />
-                )}
-                Start Problem
-              </button>
-            ) : (
-              <Link
-                href={`/login?redirect=/problems/${problem.id}`}
-                className="flex items-center gap-2 px-6 py-2.5 rounded bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white text-xs font-mono font-bold uppercase tracking-wider transition-colors"
-              >
-                <Lock className="w-4 h-4" />
-                Sign in
-              </Link>
-            )}
-          </div>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
