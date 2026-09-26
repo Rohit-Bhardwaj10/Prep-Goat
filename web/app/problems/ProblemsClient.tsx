@@ -128,83 +128,54 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
         
         {/* Search + Filter Bar */}
         <div className="bg-[#141414] border border-white/5 rounded-xl p-4 mb-6 shadow-lg">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-b border-white/5 pb-4 mb-4">
-            <div className="relative w-full md:max-w-2xl">
+          <div className="flex items-center border-b border-white/5 pb-4 mb-4">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
               <input
                 type="text"
-                placeholder="Filter archetypes, companies, primitives (Raft, Sharding, Lua)..."
+                placeholder="Search problems..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#ff6b35] transition-all"
               />
             </div>
-            <div className="flex items-center gap-6 text-xs font-mono text-white/50 w-full md:w-auto justify-end">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 bg-white/5 rounded"><Search className="w-3.5 h-3.5" /></span>
-                <span>Matched: 6 / 52</span>
-              </div>
-              <div>Solved: 1</div>
-            </div>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col lg:flex-row justify-between gap-6 text-xs">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <span className="text-white/40 w-16">Scope:</span>
-                <div className="flex gap-2">
-                  {TYPE_TAGS.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => handleTypeChange(tag)}
-                      className={`px-3 py-1 rounded transition-all font-medium ${typeFilter === tag
-                        ? 'bg-[#ff6b35] text-white'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
-                        }`}
-                    >
-                      {tag === 'All' ? `All (${initialPagination.total || 52})` : tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-white/40 w-16">Primitives:</span>
-                <div className="flex gap-4 text-white/60 font-medium">
-                  <span className="hover:text-white cursor-pointer transition-colors border-b border-white/20 pb-0.5">Consistent Hashing</span>
-                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Write-Ahead Log</span>
-                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Rate Limiting</span>
-                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Kafka Partitions</span>
-                </div>
+          <div className="flex flex-col sm:flex-row justify-between gap-6 text-xs font-mono">
+            <div className="flex items-center gap-4">
+              <span className="text-white/40">Scope:</span>
+              <div className="flex gap-2">
+                {TYPE_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => handleTypeChange(tag)}
+                    className={`px-3 py-1.5 rounded transition-all font-bold tracking-wider uppercase ${typeFilter === tag
+                      ? 'bg-[#ff6b35] text-white'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                      }`}
+                  >
+                    {tag === 'All' ? `All (${initialPagination.total || 0})` : tag}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3 justify-start lg:justify-end">
-                <span className="text-white/40">Difficulty:</span>
-                <div className="flex gap-2">
-                  {DIFFICULTY_TAGS.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => handleDifficultyChange(tag)}
-                      className={`px-3 py-1 rounded transition-all font-medium ${difficultyFilter === tag
-                        ? 'bg-white/10 text-white'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
-                        }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 justify-start lg:justify-end font-medium">
-                <span className="text-white/40">Companies:</span>
-                <div className="flex gap-3 text-white/60">
-                  <span className="hover:text-white cursor-pointer">Meta</span>
-                  <span className="hover:text-white cursor-pointer">Stripe</span>
-                  <span className="hover:text-white cursor-pointer">Uber</span>
-                  <span className="hover:text-white cursor-pointer">Netflix</span>
-                </div>
+            <div className="flex items-center gap-4">
+              <span className="text-white/40">Difficulty:</span>
+              <div className="flex gap-2">
+                {DIFFICULTY_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => handleDifficultyChange(tag)}
+                    className={`px-3 py-1.5 rounded transition-all font-bold tracking-wider uppercase ${difficultyFilter === tag
+                      ? 'bg-white/10 text-white'
+                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                      }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
