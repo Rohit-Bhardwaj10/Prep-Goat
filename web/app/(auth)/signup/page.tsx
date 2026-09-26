@@ -43,7 +43,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#0a0a0a] font-sans text-white selection:bg-white/20">
+    <div className="min-h-screen flex bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
       {/* Left side - Visual/Brand */}
       <div className="hidden lg:flex w-1/2 p-12 flex-col relative overflow-hidden border-r border-white/10">
         <Image src="/Image(6).png" alt="Background" fill priority className="object-cover object-center z-0" />
@@ -72,15 +72,15 @@ export default function SignupPage() {
             
             <div className="flex flex-col gap-4 border-t border-white/10 pt-8 mt-8">
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                <div className="w-1.5 h-1.5 bg-white/80" />
                 <span className="text-sm">Canonical system design problems</span>
               </div>
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                <div className="w-1.5 h-1.5 bg-white/80" />
                 <span className="text-sm">Distraction-free markdown editor</span>
               </div>
               <div className="flex items-center gap-3 text-white/70">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                <div className="w-1.5 h-1.5 bg-white/80" />
                 <span className="text-sm">Instant, criterion-based AI feedback</span>
               </div>
             </div>
@@ -89,7 +89,7 @@ export default function SignupPage() {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 relative z-10 bg-black/20 backdrop-blur-md">
+      <div className="flex-1 flex items-center justify-center p-8 relative z-10 bg-[#1a1a1a]">
         <div className="w-full max-w-sm space-y-8">
           
           {/* Mobile Header */}
@@ -112,7 +112,7 @@ export default function SignupPage() {
 
           <form onSubmit={handleSignup} className="space-y-5">
             {error && (
-              <div className="p-3 text-sm text-red-400 bg-red-950/50 border border-red-900/50 rounded-lg">
+              <div className="p-3 text-sm text-red-400 bg-red-950/50 border border-red-900/50">
                 {error}
               </div>
             )}
@@ -123,7 +123,7 @@ export default function SignupPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white/5 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
+                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
                 placeholder="Jane Doe"
                 required
               />
@@ -135,7 +135,7 @@ export default function SignupPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white/5 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
+                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white"
                 placeholder="you@example.com"
                 required
               />
@@ -147,7 +147,7 @@ export default function SignupPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white/5 rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm text-white placeholder:text-white/30"
+                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all shadow-sm text-white placeholder:text-white/30"
                 placeholder="••••••••"
                 required
                 minLength={8}
@@ -157,7 +157,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || isGoogleLoading}
-              className="w-full py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-medium rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 group disabled:opacity-70 mt-4"
+              className="w-full py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium transition-all shadow-sm flex items-center justify-center gap-2 group disabled:opacity-70 mt-4"
             >
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               Create Account
@@ -174,7 +174,7 @@ export default function SignupPage() {
           <button
             onClick={handleGoogleSignup}
             disabled={isLoading || isGoogleLoading}
-            className="w-full py-2.5 bg-white text-black font-medium rounded-lg hover:bg-white/90 transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
+            className="w-full py-2.5 bg-white text-black font-medium hover:bg-white/90 transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
           >
             {isGoogleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -48,7 +48,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
   const completedAttempts = attempts.filter((a) => a.status === 'COMPLETED');
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20">
+    <div className="flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
       <main className="flex-1 w-full max-w-[1400px] mx-auto pb-20 px-4 md:px-8 pt-8">
         
         <Link href="/problems" className="inline-flex items-center gap-2 text-sm font-mono text-white/50 hover:text-white transition-colors mb-10">
@@ -152,7 +152,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                     activeTab === 'testCases' ? problem.testCases : 
                     problem.extensibilityHooks)?.map((item, i) => (
                     <li key={i} className="flex gap-4 items-start">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35] mt-2 shrink-0" />
+                      <div className="w-1.5 h-1.5 bg-[#ff6b35] mt-2 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -162,10 +162,10 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
             
 
             {/* Bottom Call to Action */}
-            <div className="bg-[#141414] border border-white/5 rounded-xl p-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="bg-[#1a1a1a] border border-white/5 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex gap-4">
-                <div className="w-10 h-10 shrink-0 rounded bg-white/5 border border-white/10 flex items-center justify-center">
-                  <div className="w-4 h-4 border-2 border-white/40 rounded-sm" />
+                <div className="w-10 h-10 shrink-0 bg-white/5 border border-white/10 flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-white/40" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white/90 mb-1">Ready to build? Show off your system design skills.</h4>
@@ -176,7 +176,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
               {!isSessionPending && !session ? (
                 <Link
                   href={`/login?redirect=/problems/${problem.id}`}
-                  className="shrink-0 flex items-center gap-2 px-6 py-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-mono transition-colors"
+                  className="shrink-0 flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-mono transition-colors"
                 >
                   <Lock className="w-3.5 h-3.5 opacity-60" />
                   Sign in to Start
@@ -185,7 +185,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                 <button
                   onClick={() => startTransition(() => startAttempt(problem.id))}
                   disabled={isPending || isSessionPending}
-                  className="shrink-0 flex items-center gap-2 px-6 py-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-mono transition-colors disabled:opacity-50"
+                  className="shrink-0 flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-mono transition-colors disabled:opacity-50"
                 >
                   {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 opacity-60" />}
                   Start Environment
@@ -199,7 +199,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
           <div className="flex flex-col gap-6">
             
             {/* Past Attempts */}
-            <div className="bg-[#141414] rounded-xl border border-white/5 p-6 shadow-lg">
+            <div className="bg-[#1a1a1a] border border-white/5 p-6">
               <h2 className="text-[11px] font-mono font-bold text-white/60 uppercase tracking-widest mb-6 flex justify-between items-center">
                 <span>Past Attempts</span>
               </h2>
@@ -226,7 +226,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                       <li key={attempt.id} className="group relative">
                         <Link
                           href={`/problems/${problem.id}/attempt/${attempt.id}`}
-                          className="block p-4 rounded bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all cursor-pointer"
+                          className="block p-4 bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all cursor-pointer"
                         >
                           <div className="flex items-baseline justify-between mb-2">
                             <span className="font-medium text-white group-hover:text-[#ff6b35] transition-colors text-sm">

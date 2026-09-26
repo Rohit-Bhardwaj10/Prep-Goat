@@ -49,9 +49,9 @@ function VerifyEmailContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] font-sans text-white p-4">
-      <div className="max-w-md w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 text-center space-y-6">
-        <div className="w-16 h-16 bg-[#ff6b35]/20 text-[#ff6b35] rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a] font-sans text-white p-4">
+      <div className="max-w-md w-full bg-[#1a1a1a] border border-white/10 p-8 text-center space-y-6">
+        <div className="w-16 h-16 bg-[#ff6b35]/20 text-[#ff6b35] flex items-center justify-center mx-auto mb-4">
           <MailCheck className="w-8 h-8" />
         </div>
         
@@ -62,13 +62,13 @@ function VerifyEmailContent() {
         </p>
 
         {message && (
-          <div className="p-3 text-sm text-emerald-400 bg-emerald-950/50 border border-emerald-900/50 rounded-lg">
+          <div className="p-3 text-sm text-emerald-400 bg-emerald-950/50 border border-emerald-900/50">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="p-3 text-sm text-red-400 bg-red-950/50 border border-red-900/50 rounded-lg">
+          <div className="p-3 text-sm text-red-400 bg-red-950/50 border border-red-900/50">
             {error}
           </div>
         )}
@@ -79,12 +79,12 @@ function VerifyEmailContent() {
             value={emailInput}
             onChange={(e) => setEmailInput(e.target.value)}
             placeholder="Confirm your email"
-            className="w-full px-4 py-2.5 bg-[#1a1a1a] rounded-lg border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white text-sm"
+            className="w-full px-4 py-2.5 bg-[#1a1a1a] border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all shadow-sm placeholder:text-white/30 text-white text-sm"
           />
           <button
             onClick={handleResend}
             disabled={isSending || !emailInput}
-            className="w-full py-2.5 bg-white/5 border border-white/10 text-white font-medium rounded-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+            className="w-full py-2.5 bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
           >
             {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
             Resend Verification Email
@@ -110,7 +110,7 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a]">
         <Loader2 className="w-8 h-8 text-[#ff6b35] animate-spin" />
       </div>
     }>

@@ -167,7 +167,7 @@ export default function ResourcesClient() {
   const external = filtered.filter(r => r.type !== 'original');
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a0a0a] font-sans text-white selection:bg-white/20">
+    <div className="flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
 
       {/* ── Navbar ─────────────────────────────────────────── */}
       <header className="relative z-50 w-full px-8 md:px-12 py-8 flex items-center justify-between">
