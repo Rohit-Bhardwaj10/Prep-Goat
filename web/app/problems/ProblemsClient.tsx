@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FileText, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FileText, Search, ChevronLeft, ChevronRight, Lock, Check, Mail, Play, Eye } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { Navbar } from '@/components/Navbar';
 
 interface Problem {
   id: string;
@@ -92,201 +93,224 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a0a0a] font-sans text-white selection:bg-white/20">
+    <div className="flex flex-col min-h-screen bg-[#0d0d0d] font-sans text-white selection:bg-white/20">
+      <Navbar />
 
-      {/* Hero Section — navbar baked in */}
-      <div className="relative w-full h-80 md:h-[420px] overflow-hidden">
-        <Image
-          src="/Image(6).png"
-          alt="Design Problems Hero"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        {/* Gradient overlay: dark at top (for nav legibility) + fade to page bg at bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-[#0a0a0a]" />
-
-        {/* ── Navbar row ── */}
-        <div className="absolute top-0 left-0 right-0 z-20 px-8 md:px-12 py-8 flex items-center justify-between">
-          {/* Logo — same as hero */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#ff6b35]">
-                  <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="13" r="2.5" fill="currentColor" />
-                </svg>
-              </div>
-              <span className="font-bold tracking-widest text-base text-white">PREP-G</span>
-            </Link>
-          </div>
-
-          {/* Nav pill — same as hero */}
-          <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
-            <Link href="/problems" className="px-5 py-2 text-white bg-white/10 transition-colors">
-              Problems
-            </Link>
-            <Link href="/resources" className="px-5 py-2 hover:text-white transition-colors">
-              Resources
-            </Link>
-            {!isPending && !session && (
-              <>
-                <Link href="/login" className="px-5 py-2 hover:text-white transition-colors">Log in</Link>
-                <Link href="/signup" className="px-5 py-2 hover:text-white transition-colors">Sign up</Link>
-              </>
-            )}
-            {!isPending && session && (
-              <button onClick={handleSignOut} className="px-5 py-2 hover:text-white transition-colors">
-                Sign out
-              </button>
-            )}
-          </nav>
+      {/* Hero Section */}
+      <div className="w-full flex flex-col items-center justify-center pt-8 pb-12 px-4 text-center">
+        <div className="flex items-center gap-2 text-[#ff6b35] text-xs font-mono uppercase tracking-[0.2em] mb-4 font-bold">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]"></div>
+          <span>Practice Platform</span>
+          <span className="text-white/30 px-1">•</span>
+          <span>52 Archetypes</span>
         </div>
-
-        {/* ── Hero Text ── */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-[#ff6b35] font-mono text-xs uppercase tracking-[0.3em] mb-3 font-bold">
-            Practice Platform
-          </p>
-          <h1 className="text-4xl md:text-6xl font-bold font-mono uppercase tracking-tight text-white drop-shadow-lg">
-            Design Problems
-          </h1>
-          <p className="mt-4 text-white/60 text-sm md:text-base max-w-md">
-            Select a canonical system to begin your design attempt.
-          </p>
+        
+        <h1 className="text-3xl md:text-5xl font-serif uppercase tracking-wider text-white drop-shadow-sm mb-4" style={{ fontFamily: 'var(--font-serif, "Georgia", serif)' }}>
+          System Design Problems
+        </h1>
+        
+        <p className="text-white/70 text-sm md:text-base max-w-2xl mb-6">
+          Canonical production architectures, scale bottlenecks, and Staff-level trade-offs deconstructed.
+        </p>
+        
+        <div className="flex items-center gap-3 text-xs font-mono text-white/50 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+          <span>52 Cases</span>
+          <span className="text-white/30">/</span>
+          <span>14 LLD • 26 HLD • 12 Hybrid</span>
+          <span className="text-white/30">/</span>
+          <span>P99: {'<'}4ms</span>
+          <span className="text-white/30">/</span>
+          <span>v2.1-sandboxed</span>
         </div>
       </div>
 
-      {/* Search + Filter Bar */}
-      <div className="sticky top-0 z-20 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row gap-3 items-center">
-          {/* Search */}
-          <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-            <input
-              type="text"
-              placeholder="Search problems..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent transition-all"
-            />
+      <main className="flex-1 w-full max-w-7xl mx-auto px-6 pb-20">
+        
+        {/* Search + Filter Bar */}
+        <div className="bg-[#141414] border border-white/5 rounded-xl p-4 mb-6 shadow-lg">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-b border-white/5 pb-4 mb-4">
+            <div className="relative w-full md:max-w-2xl">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+              <input
+                type="text"
+                placeholder="Filter archetypes, companies, primitives (Raft, Sharding, Lua)..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-lg text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#ff6b35] transition-all"
+              />
+            </div>
+            <div className="flex items-center gap-6 text-xs font-mono text-white/50 w-full md:w-auto justify-end">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 bg-white/5 rounded"><Search className="w-3.5 h-3.5" /></span>
+                <span>Matched: 6 / 52</span>
+              </div>
+              <div>Solved: 1</div>
+            </div>
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex gap-2">
-              {TYPE_TAGS.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => handleTypeChange(tag)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${typeFilter === tag
-                    ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
-                    : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
-                    }`}
-                >
-                  {tag}
-                </button>
-              ))}
+          <div className="flex flex-col lg:flex-row justify-between gap-6 text-xs">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-white/40 w-16">Scope:</span>
+                <div className="flex gap-2">
+                  {TYPE_TAGS.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => handleTypeChange(tag)}
+                      className={`px-3 py-1 rounded transition-all font-medium ${typeFilter === tag
+                        ? 'bg-[#ff6b35] text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        }`}
+                    >
+                      {tag === 'All' ? `All (${initialPagination.total || 52})` : tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-white/40 w-16">Primitives:</span>
+                <div className="flex gap-4 text-white/60 font-medium">
+                  <span className="hover:text-white cursor-pointer transition-colors border-b border-white/20 pb-0.5">Consistent Hashing</span>
+                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Write-Ahead Log</span>
+                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Rate Limiting</span>
+                  <span className="hover:text-white cursor-pointer transition-colors border-b border-transparent hover:border-white/20 pb-0.5">Kafka Partitions</span>
+                </div>
+              </div>
             </div>
-            <div className="w-px bg-white/10 hidden sm:block"></div>
-            <div className="flex gap-2">
-              {DIFFICULTY_TAGS.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => handleDifficultyChange(tag)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${difficultyFilter === tag
-                    ? 'bg-[#ff6b35] border-[#ff6b35] text-white'
-                    : 'bg-white/5 border-white/10 text-white/50 hover:text-white hover:border-white/30'
-                    }`}
-                >
-                  {tag}
-                </button>
-              ))}
+
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3 justify-start lg:justify-end">
+                <span className="text-white/40">Difficulty:</span>
+                <div className="flex gap-2">
+                  {DIFFICULTY_TAGS.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => handleDifficultyChange(tag)}
+                      className={`px-3 py-1 rounded transition-all font-medium ${difficultyFilter === tag
+                        ? 'bg-white/10 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 justify-start lg:justify-end font-medium">
+                <span className="text-white/40">Companies:</span>
+                <div className="flex gap-3 text-white/60">
+                  <span className="hover:text-white cursor-pointer">Meta</span>
+                  <span className="hover:text-white cursor-pointer">Stripe</span>
+                  <span className="hover:text-white cursor-pointer">Uber</span>
+                  <span className="hover:text-white cursor-pointer">Netflix</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Problem List */}
-      <main className="flex-1 w-full max-w-5xl mx-auto pt-8 pb-12 px-6">
-        <p className="text-xs text-white/40 font-mono mb-4 uppercase tracking-widest">
-          {initialPagination.total} problem{initialPagination.total !== 1 ? 's' : ''} found
-        </p>
-
+        {/* Problem List */}
         {problems.length === 0 ? (
-          <div className="border border-white/10 bg-[#0a0a0a] rounded-xl p-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 border border-white/10">
-              <FileText className="w-5 h-5 text-white/40" />
+          <div className="border border-white/5 bg-[#141414] rounded-xl p-16 text-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-[#1a1a1a] flex items-center justify-center mx-auto mb-4 border border-white/5">
+              <Search className="w-5 h-5 text-white/40" />
             </div>
             <h3 className="text-sm font-medium text-white/90">No problems found</h3>
             <p className="text-sm text-white/50 mt-1">Try a different search or filter.</p>
           </div>
         ) : (
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-[#141414] border border-white/5 rounded-xl shadow-lg overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5">
-                  <th className="py-4 px-6 text-xs font-bold text-white/50 uppercase tracking-widest w-[45%]">Title</th>
-                  <th className="py-4 px-6 text-xs font-bold text-white/50 uppercase tracking-widest">Type & Tags</th>
-                  <th className="py-4 px-6 text-xs font-bold text-white/50 uppercase tracking-widest">Difficulty</th>
-                  <th className="py-4 px-6 text-xs font-bold text-white/50 uppercase tracking-widest text-right">Status</th>
+                <tr className="border-b border-white/5 text-[10px] md:text-xs font-mono text-white/40 uppercase tracking-widest bg-[#1a1a1a]/50">
+                  <th className="py-4 px-4 w-12 text-center">Status</th>
+                  <th className="py-4 px-4 w-1/3">Problem & Archetype</th>
+                  <th className="py-4 px-4 hidden md:table-cell">System Primitives & Tags</th>
+                  <th className="py-4 px-4 hidden lg:table-cell">Scale / Constraints</th>
+                  <th className="py-4 px-4">Difficulty</th>
+                  <th className="py-4 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-white/5">
                 {problems.map((problem, idx) => {
                   const diff = problem.difficulty || 'MEDIUM';
                   const pType = problem.type || 'LLD';
+                  const isSolved = idx === 0; // Mock solved status
+                  const isStarted = idx === 2; // Mock started status
+                  
                   return (
                     <tr
                       key={problem.id}
-                      className={`group hover:bg-[#1a1a1a] transition-colors ${idx % 2 !== 0 ? 'bg-white/[0.02]' : 'bg-transparent'}`}
+                      className="group hover:bg-white/[0.02] transition-colors"
                     >
-                      <td className="py-5 px-6">
-                        <Link href={`/problems/${problem.id}`} className="block">
-                          <div className="font-semibold text-base text-white/90 group-hover:text-[#ff6b35] transition-colors flex items-center gap-2">
+                      <td className="py-5 px-4 align-top pt-6">
+                        <div className="flex items-center justify-center font-mono text-xs text-white/40">
+                          {isSolved ? (
+                            <Check className="w-4 h-4 text-white" />
+                          ) : (
+                            <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                          )}
+                          <span className="ml-2 w-6">#{String(idx + 1).padStart(2, '0')}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex flex-col">
+                          <Link href={`/problems/${problem.id}`} className="group-hover:text-[#ff6b35] transition-colors text-white/90 font-medium flex items-center gap-2 mb-1 text-sm md:text-base">
                             {problem.title}
-                          </div>
-                          <div className="text-sm text-white/50 mt-1 line-clamp-1 max-w-lg">
+                            <span className="text-[10px] font-mono tracking-widest text-white/30 group-hover:text-[#ff6b35]/50 uppercase">{pType}</span>
+                          </Link>
+                          <div className="text-[13px] text-white/60 line-clamp-2 max-w-lg leading-relaxed">
                             {problem.description}
                           </div>
-                        </Link>
+                          <div className="text-[11px] text-white/40 mt-2 font-mono">
+                            Amazon • Microsoft
+                          </div>
+                        </div>
                       </td>
-                      <td className="py-5 px-6 align-middle">
-                        <div className="flex flex-wrap gap-2">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-white/10 text-white border border-white/20">
-                            {pType}
-                          </span>
-                          {problem.tags && problem.tags.slice(0, 2).map((tag, i) => (
-                            <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-white/5 text-white/60 border border-white/10">
+                      <td className="py-4 px-4 hidden md:table-cell align-top pt-6">
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 max-w-[200px]">
+                          {(problem.tags || ['OOP Design', 'Concurrency', 'State Machine']).slice(0, 3).map((tag, i) => (
+                            <span key={i} className="text-[11px] font-mono text-white/60 border-b border-white/10 pb-0.5">
                               {tag}
                             </span>
                           ))}
-                          {problem.tags && problem.tags.length > 2 && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-white/5 text-white/60 border border-white/10">
-                              +{problem.tags.length - 2}
-                            </span>
-                          )}
                         </div>
                       </td>
-                      <td className="py-5 px-6 align-middle">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider border ${DIFFICULTY_COLORS[diff]}`}>
+                      <td className="py-4 px-4 hidden lg:table-cell align-top pt-6">
+                        <div className="flex flex-col gap-1 font-mono text-[11px] text-white/60">
+                          {(problem.constraints || ['100k Members', '<10ms Locks']).slice(0, 2).map((c, i) => (
+                            <span key={i}>{c}</span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 align-top pt-6">
+                        <span className={`text-xs font-mono font-bold uppercase tracking-wider ${
+                          diff === 'EASY' ? 'text-white/60' : 
+                          diff === 'MEDIUM' ? 'text-white/80' : 
+                          diff === 'HARD' ? 'text-white' : 'text-[#ff6b35]'
+                        }`}>
                           {diff}
                         </span>
                       </td>
-                      <td className="py-5 px-6 text-right align-middle">
+                      <td className="py-4 px-4 text-right align-top pt-6">
                         {session ? (
                           <Link
                             href={`/problems/${problem.id}`}
-                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-[#2a2a2a] hover:bg-[#ff6b35] border border-white/5 hover:border-[#ff6b35] text-white/90 font-semibold text-xs transition-all"
+                            className="inline-flex items-center gap-1.5 text-xs font-mono text-white/60 hover:text-white transition-colors uppercase tracking-wider group/btn"
                           >
-                            Solve
+                            {isStarted ? 'Resume' : isSolved ? 'View' : 'Solve'}
+                            {isStarted ? <Play className="w-3 h-3 group-hover/btn:text-[#ff6b35]" /> : 
+                             isSolved ? <Eye className="w-3.5 h-3.5 group-hover/btn:text-[#ff6b35]" /> : 
+                             <Mail className="w-3.5 h-3.5 group-hover/btn:text-[#ff6b35]" />}
                           </Link>
                         ) : (
                           <Link
                             href={`/login?redirect=/problems/${problem.id}`}
-                            className="inline-flex items-center justify-center h-8 px-4 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white font-semibold text-xs transition-all"
+                            className="inline-flex items-center gap-1.5 text-xs font-mono text-[#ff6b35]/70 hover:text-[#ff6b35] transition-colors uppercase tracking-wider"
                           >
-                            Sign in to Solve
+                            <Lock className="w-3 h-3" />
+                            Sign in
                           </Link>
                         )}
                       </td>
@@ -295,35 +319,116 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
                 })}
               </tbody>
             </table>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {initialPagination.totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
-            <span className="text-xs text-white/40 font-mono uppercase tracking-wider">
-              Page {initialPagination.page} of {initialPagination.totalPages}
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handlePageChange(initialPagination.page - 1)}
-                disabled={initialPagination.page <= 1}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Prev
-              </button>
-              <button
-                onClick={() => handlePageChange(initialPagination.page + 1)}
-                disabled={initialPagination.page >= initialPagination.totalPages}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
-              >
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </button>
+            
+            {/* Table Footer */}
+            <div className="bg-[#1a1a1a]/50 border-t border-white/5 py-3 px-6 flex items-center justify-between">
+              <div className="text-[11px] font-mono text-white/40">
+                Showing {(initialPagination.page - 1) * initialPagination.limit + 1}–{Math.min(initialPagination.page * initialPagination.limit, initialPagination.total)} of {initialPagination.total} Canonical Systems <span className="mx-2">•</span> Indexed under Schema v1.4
+              </div>
+              
+              {initialPagination.totalPages > 1 && (
+                <div className="flex items-center gap-1 text-[11px] font-mono text-white/60">
+                  <span className="mr-2">Previous</span>
+                  <button onClick={() => handlePageChange(initialPagination.page - 1)} disabled={initialPagination.page <= 1} className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10 disabled:opacity-30">
+                    <ChevronLeft className="w-3 h-3" />
+                  </button>
+                  <span className="w-6 h-6 rounded flex items-center justify-center bg-[#ff6b35] text-white">1</span>
+                  <button onClick={() => handlePageChange(2)} className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10">2</button>
+                  <button onClick={() => handlePageChange(3)} className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10">3</button>
+                  <span className="mx-1 opacity-50">..</span>
+                  <button onClick={() => handlePageChange(initialPagination.totalPages)} className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10">{initialPagination.totalPages}</button>
+                  <button onClick={() => handlePageChange(initialPagination.page + 1)} disabled={initialPagination.page >= initialPagination.totalPages} className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10 disabled:opacity-30">
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                  <span className="ml-2">Next</span>
+                </div>
+              )}
             </div>
           </div>
         )}
+        
+        {/* Bottom widgets section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div className="bg-[#141414] border border-white/5 rounded-xl p-6 relative overflow-hidden group">
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="text-xs font-mono text-white/60 uppercase tracking-widest">Candidate Progress</h3>
+              <span className="text-[10px] font-mono bg-white/10 text-white/80 px-2 py-0.5 rounded">TOP 12%</span>
+            </div>
+            <div className="text-xl font-serif text-white mb-8 group-hover:text-[#ff6b35] transition-colors" style={{ fontFamily: 'var(--font-serif, "Georgia", serif)' }}>
+              Staff-Level Readiness
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between text-xs text-white/60">
+                <span>Benchmarks</span>
+                <span className="font-mono text-white">1 / 52 (2%)</span>
+              </div>
+              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-[#ff6b35] w-[2%]" />
+              </div>
+              <div className="flex justify-between text-[10px] text-white/40 mt-1">
+                <span>Review: 89% alignment</span>
+                <span>Target: Principal</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="text-xs font-mono text-white/60 uppercase tracking-widest">High Frequency</h3>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" />
+            </div>
+            <div className="text-xl font-serif text-white mb-4" style={{ fontFamily: 'var(--font-serif, "Georgia", serif)' }}>
+              Distributed Consensus & WAL
+            </div>
+            <p className="text-[13px] text-white/60 leading-relaxed mb-6">
+              Raft heartbeat drift and Paxos log replication in recent Staff debriefs.
+            </p>
+            <div className="flex justify-between items-center text-xs font-mono pt-4 border-t border-white/5">
+              <span className="text-white/40">Suggested:</span>
+              <span className="text-white hover:text-[#ff6b35] cursor-pointer transition-colors flex items-center gap-1">
+                Raft Leader Election <ChevronRight className="w-3 h-3" />
+              </span>
+            </div>
+          </div>
+          
+          <div className="bg-[#141414] border border-white/5 rounded-xl p-6 bg-gradient-to-br from-[#141414] to-[#1a1412]">
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="text-xs font-mono text-white/60 uppercase tracking-widest flex items-center gap-2">
+                <div className="w-3 h-3 border border-white/30 rounded-sm flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white/50 rounded-sm" />
+                </div>
+                Studio Simulator
+              </h3>
+            </div>
+            <div className="text-xl font-serif text-white mb-4" style={{ fontFamily: 'var(--font-serif, "Georgia", serif)' }}>
+              Live Chaos Engine
+            </div>
+            <p className="text-[13px] text-white/60 leading-relaxed mb-6">
+              Inject network partitions and verify failover behaviors directly in canvas.
+            </p>
+            <div className="flex justify-center pt-4">
+              <button className="text-xs font-mono text-white hover:text-[#ff6b35] transition-colors border-b border-white/20 hover:border-[#ff6b35] pb-0.5 flex items-center gap-1.5">
+                Open Architecture Studio <Search className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Very bottom footer strip */}
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-wrap gap-4 items-center justify-between text-[11px] font-mono text-white/40">
+          <div className="flex gap-6">
+            <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" /> Systems Operational 99.99%</span>
+            <span className="flex items-center gap-1.5"><span className="text-white/30">Edge P99:</span> <span className="text-[#ff6b35]">18ms</span></span>
+            <span className="flex items-center gap-1.5"><span className="text-white/30">Region:</span> <span className="text-white">us-east-cluster</span></span>
+          </div>
+          <div className="flex gap-4">
+            <span className="hover:text-white cursor-pointer transition-colors">API</span>
+            <span className="hover:text-white cursor-pointer transition-colors">Status</span>
+            <span className="hover:text-white cursor-pointer transition-colors">Spec 1.4.2</span>
+            <span>© PREP-G</span>
+          </div>
+        </div>
+
       </main>
     </div>
   );
