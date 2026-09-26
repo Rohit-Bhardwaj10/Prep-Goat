@@ -102,26 +102,16 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
           <div className="w-1.5 h-1.5 rounded-full bg-[#ff6b35]"></div>
           <span>Practice Platform</span>
           <span className="text-white/30 px-1">•</span>
-          <span>52 Archetypes</span>
+          <span>{initialPagination.total} Problems</span>
         </div>
         
-        <h1 className="text-3xl md:text-5xl font-serif uppercase tracking-wider text-white drop-shadow-sm mb-4" style={{ fontFamily: 'var(--font-serif, "Georgia", serif)' }}>
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white drop-shadow-sm mb-4">
           System Design Problems
         </h1>
         
-        <p className="text-white/70 text-sm md:text-base max-w-2xl mb-6">
+        <p className="text-white/70 text-sm md:text-base max-w-2xl">
           Canonical production architectures, scale bottlenecks, and Staff-level trade-offs deconstructed.
         </p>
-        
-        <div className="flex items-center gap-3 text-xs font-mono text-white/50 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-          <span>52 Cases</span>
-          <span className="text-white/30">/</span>
-          <span>14 LLD • 26 HLD • 12 Hybrid</span>
-          <span className="text-white/30">/</span>
-          <span>P99: {'<'}4ms</span>
-          <span className="text-white/30">/</span>
-          <span>v2.1-sandboxed</span>
-        </div>
       </div>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 pb-20">
