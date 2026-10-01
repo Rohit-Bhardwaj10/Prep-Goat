@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ExternalLink, BookOpen, Play, ArrowUpRight } from 'lucide-react';
-import DotField from '@/components/DotField';
 
 // ─── Types ──────────────────────────────────────────────────
 type ContentType = 'original' | 'link' | 'video';
@@ -168,21 +167,7 @@ export default function ResourcesClient() {
   const external = filtered.filter(r => r.type !== 'original');
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <DotField
-          dotRadius={1.5}
-          dotSpacing={14}
-          cursorRadius={250}
-          bulgeStrength={40}
-          glowRadius={100}
-          sparkle={false}
-          waveAmplitude={0}
-          glowColor="#1a1a1a"
-        />
-      </div>
-
-      <div className="relative z-10 flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
 
       {/* ── Navbar ─────────────────────────────────────────── */}
       <header className="relative z-50 w-full px-8 md:px-12 py-8 flex items-center justify-between">
@@ -253,7 +238,7 @@ export default function ResourcesClient() {
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/30">Written here</span>
               <div className="flex-1 h-px bg-white/5" />
             </div>
-            <div className="flex flex-col divide-y divide-white/5 bg-[#1a1a1a] border border-white/5 p-4 rounded-lg">
+            <div className="flex flex-col divide-y divide-white/5">
               {originals.map(item => (
                 <Link
                   key={item.id}
@@ -298,7 +283,7 @@ export default function ResourcesClient() {
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/30">From around the web</span>
               <div className="flex-1 h-px bg-white/5" />
             </div>
-            <div className="flex flex-col divide-y divide-white/5 bg-[#1a1a1a] border border-white/5 p-4 rounded-lg">
+            <div className="flex flex-col divide-y divide-white/5">
               {external.map(item => {
                 const meta = TYPE_META[item.type];
                 const Icon = item.type === 'video' ? Play : ExternalLink;
@@ -361,7 +346,6 @@ export default function ResourcesClient() {
           <span>Study hard.</span>
         </div>
       </footer>
-      </div>
     </div>
   );
 }

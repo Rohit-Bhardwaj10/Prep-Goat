@@ -42,7 +42,7 @@ const DotField = memo(({
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let resizeTimer: NodeJS.Timeout;
+    let resizeTimer: any;
 
     function resize() {
       clearTimeout(resizeTimer);
@@ -51,8 +51,8 @@ const DotField = memo(({
 
     function doResize() {
       if (!canvas) return;
-      if (!canvas.parentElement) return;
-      const rect = canvas.parentElement.getBoundingClientRect();
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (!rect) return;
       const w = rect.width;
       const h = rect.height;
 
@@ -158,7 +158,8 @@ const DotField = memo(({
         if (distSq < crSq && eng > 0.01) {
           const dist = Math.sqrt(distSq);
           if (isBulge) {
-            const push = (1 - dist / cr) * (1 - dist / cr) * p.bulgeStrength * eng;
+            const t = 1 - dist / cr;
+            const push = t * t * p.bulgeStrength * eng;
             const angle = Math.atan2(dy, dx);
             d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
             d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;

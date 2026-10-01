@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Loader2, Lock, Bookmark, Download, Play, Copy } from 'lucide-react';
 import { startAttempt } from './actions';
 import { authClient } from '@/lib/auth-client';
-import DotField from '@/components/DotField';
 
 interface Problem {
   id: string;
@@ -49,21 +48,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
   const completedAttempts = attempts.filter((a) => a.status === 'COMPLETED');
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <DotField
-          dotRadius={1.5}
-          dotSpacing={14}
-          cursorRadius={250}
-          bulgeStrength={40}
-          glowRadius={100}
-          sparkle={false}
-          waveAmplitude={0}
-          glowColor="#1a1a1a"
-        />
-      </div>
-
-      <div className="relative z-10 flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
       <main className="flex-1 w-full max-w-[1400px] mx-auto pb-20 px-4 md:px-8 pt-8">
         
         <Link href="/problems" className="inline-flex items-center gap-2 text-sm font-mono text-white/50 hover:text-white transition-colors mb-10">
@@ -72,7 +57,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
         </Link>
 
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 pb-6 border border-white/5 bg-[#1a1a1a] p-6 rounded-lg">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 pb-6 border-b border-white/5">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono font-bold uppercase tracking-widest text-[#ff6b35] mb-4">
               <span>{problem.type || 'LLD'}</span>
@@ -93,7 +78,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
           
           {/* Left Column: Problem Spec */}
           <div className="flex flex-col min-w-0">
-            <div className="bg-[#1a1a1a] border border-white/5 p-6 rounded-lg mb-6">
+            
             {/* Tabs */}
             <div className="flex items-center gap-8 mb-8 border-b border-white/5 overflow-x-auto no-scrollbar">
               <button
@@ -174,8 +159,7 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                 </ul>
               )}
             </div>
-            </div>
-
+            
             {/* Bottom Call to Action */}
             <div className="bg-[#1a1a1a] border border-white/5 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex gap-4">
@@ -269,7 +253,6 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
           </div>
         </div>
       </main>
-      </div>
     </div>
   );
 }
