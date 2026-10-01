@@ -72,6 +72,26 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
             </p>
           </div>
 
+          <div className="mt-6 lg:mt-0 shrink-0">
+            {!isSessionPending && !session ? (
+              <Link
+                href={`/login?redirect=/problems/${problem.id}`}
+                className="flex items-center gap-2 px-8 py-3 bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white text-sm font-mono font-bold transition-colors"
+              >
+                <Lock className="w-4 h-4" />
+                Sign in to Start
+              </Link>
+            ) : (
+              <button
+                onClick={() => startTransition(() => startAttempt(problem.id))}
+                disabled={isPending || isSessionPending}
+                className="flex items-center gap-2 px-8 py-3 bg-[#ff6b35] hover:bg-[#ff6b35]/90 text-white text-sm font-mono font-bold transition-colors disabled:opacity-50"
+              >
+                {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
+                Start Attempt
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
