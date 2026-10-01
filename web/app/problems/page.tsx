@@ -25,7 +25,7 @@ async function getProblems(searchParams: { [key: string]: string | string[] | un
     // Construct query string
     const query = new URLSearchParams();
     if (searchParams.page) query.set('page', searchParams.page as string);
-    if (searchParams.limit) query.set('limit', searchParams.limit as string);
+    query.set('limit', (searchParams.limit as string) || '100');
     if (searchParams.search) query.set('search', searchParams.search as string);
     if (searchParams.difficulty) query.set('difficulty', searchParams.difficulty as string);
     if (searchParams.type) query.set('type', searchParams.type as string);
