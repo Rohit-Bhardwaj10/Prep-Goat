@@ -7,6 +7,7 @@ import problemsRouter from "./routes/problems";
 import attemptsRouter from "./routes/attempts";
 import adminRouter from "./routes/admin";
 import { resourcesRouter } from "./routes/resources";
+import abilityRouter from "./routes/ability";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -28,6 +29,7 @@ app.use("/api/problems", problemsRouter);
 app.use("/api/attempts", attemptsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/resources", resourcesRouter);
+app.use("/api/ability", abilityRouter);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

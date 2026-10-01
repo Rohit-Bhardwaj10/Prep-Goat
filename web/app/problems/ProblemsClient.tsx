@@ -44,6 +44,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
   const [difficultyFilter, setDifficultyFilter] = useState(searchParams.get('difficulty') || 'All');
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || 'HLD');
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [abilityData, setAbilityData] = useState<{ unlockedProblems: string[] } | null>(null);
 
   const toggleGroup = (group: string) => {
     setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
@@ -62,6 +63,22 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
     if (updates.page === undefined) params.delete('page');
     router.push(`${pathname}?${params.toString()}`);
   }, [searchParams, pathname, router]);
+
+  useEffect(() => {
+    if (session) {
+      const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
+      fetch(`${SERVER_URL}/api/ability`, {
+        // credentials: 'omit' by default, better-auth handles token or cookie based on client setup.
+        // If we need credentials for cookies:
+        credentials: 'include'
+      })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data) setAbilityData(data);
+      })
+      .catch(console.error);
+    }
+  }, [session]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

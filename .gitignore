@@ -8,3 +8,8 @@ coverage
 build
 out
 .next
+
+# Seed files
+server/prisma/seed.ts
+server/src/seed_problems_100.ts
+server/src/seed_resources.ts
