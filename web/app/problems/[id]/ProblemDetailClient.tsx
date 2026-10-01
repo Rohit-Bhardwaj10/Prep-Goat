@@ -136,13 +136,13 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
               {activeTab === 'requirements' && (
                 <div className="space-y-8">
                   {problem.requirements?.map((req, i) => {
-                    // Split the requirement into title and description if it contains a period or colon in the first half
-                    let title = `Requirement ${i + 1}`;
-                    let desc = req;
+                    // Extract title and description if it contains a period or colon in the first half
+                    let title = req;
+                    let desc = '';
                     const splitMatch = req.match(/^([^.!?:]+[.!?:]+)(.*)$/);
-                    if (splitMatch && splitMatch[1].length < 60) {
+                    if (splitMatch && splitMatch[1].length < 60 && splitMatch[2].trim().length > 0) {
                       title = splitMatch[1].trim();
-                      desc = splitMatch[2].trim() || req;
+                      desc = splitMatch[2].trim();
                     }
                     
                     return (
@@ -151,8 +151,10 @@ export function ProblemDetailClient({ problem, initialAttempts }: ProblemDetailC
                           {(i + 1).toString().padStart(2, '0')}
                         </span>
                         <div>
-                          <h3 className="text-white/90 font-bold mb-2">{title}</h3>
-                          <p className="text-white/60 text-[13px] leading-relaxed">{desc !== title ? desc : req}</p>
+                          <h3 className="text-white/90 font-bold">{title}</h3>
+                          {desc && (
+                            <p className="text-white/60 text-[13px] leading-relaxed mt-2">{desc}</p>
+                          )}
                         </div>
                       </div>
                     );
