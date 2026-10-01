@@ -6,6 +6,7 @@ import { Search, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
+import DotField from '@/components/DotField';
 
 interface Problem {
   id: string;
@@ -71,10 +72,24 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
-      <Navbar />
+    <div className="relative flex flex-col min-h-screen bg-[#1a1a1a] font-sans text-white selection:bg-white/20">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={14}
+          cursorRadius={250}
+          bulgeStrength={40}
+          glowRadius={100}
+          sparkle={false}
+          waveAmplitude={0}
+          glowColor="#1a1a1a"
+        />
+      </div>
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+
+        <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
 
         {/* Page title row */}
         <div className="flex items-center justify-between mb-6">
@@ -137,12 +152,12 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
 
         {/* Problem list */}
         {problems.length === 0 ? (
-          <div className="p-16 text-center border-x border-b border-white/5">
+          <div className="p-16 text-center border-x border-b border-white/5 bg-[#1a1a1a]">
             <Search className="w-8 h-8 text-white/20 mx-auto mb-4" />
             <p className="text-sm text-white/40">No problems found. Try a different filter.</p>
           </div>
         ) : (
-          <div className="border-x border-b border-white/5">
+          <div className="border-x border-b border-white/5 bg-[#1a1a1a]">
 
             {/* Table header */}
             <div className="grid grid-cols-[2.5rem_1fr_auto_auto] md:grid-cols-[2.5rem_1fr_10rem_6rem_5rem] px-5 py-3 border-b border-white/5 text-xs font-mono text-white/40 uppercase tracking-widest bg-[#1a1a1a]">
@@ -238,6 +253,7 @@ export default function ProblemsClient({ problems, initialPagination }: { proble
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }
