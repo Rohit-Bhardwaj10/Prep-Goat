@@ -11,12 +11,12 @@ export function HeroSection() {
   const { ref, visible } = useScrollReveal(0.1);
 
   return (
-    <section className="landing-section" style={{ paddingTop: 180, paddingBottom: 40, position: "relative" }}>
+    <section className="landing-section relative pt-24 md:pt-[180px] pb-10">
       {/* Backdrop image */}
       <div className="hero-backdrop" style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "100vw", bottom: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-        <Image 
-          src="/hero-backdrop.png" 
-          alt="Hero background" 
+        <Image
+          src="/hero-backdrop.png"
+          alt="Hero background"
           fill
           style={{ objectFit: "cover", objectPosition: "top center", opacity: 0.7 }}
           priority
@@ -30,13 +30,13 @@ export function HeroSection() {
         className={`landing-fade-in ${visible ? "is-visible" : ""}`}
         style={{ maxWidth: 960, position: "relative", zIndex: 1 }}
       >
-        <h1 className="landing-h1 md:whitespace-nowrap" style={{ fontFamily: "var(--landing-font-mono)", letterSpacing: "-0.02em" }}>
+        <h1 className="landing-h1 md:whitespace-nowrap" style={{ fontFamily: "var(--font-jakarta-sans)", letterSpacing: "-0.02em" }}>
           Practice system design
           <br />
           the way interviews work.
         </h1>
-        <p className="landing-body landing-body--lg" style={{ marginTop: 20, maxWidth: 640, fontFamily: "var(--landing-font-mono)", fontSize: "16px", lineHeight: "1.6" }}>
-          100 canonical problems. Guided multi-step workflow. Instant AI
+        <p className="landing-body landing-body--lg mt-5 text-sm md:text-base" style={{ maxWidth: 640, fontFamily: "var(--landing-font-mono)", lineHeight: "1.6" }}>
+          100 canonical problems. Guided multi-step workflow. Instant
           evaluation on architecture, trade-offs, and code. No hand-waving.
         </p>
         <div className="flex flex-wrap items-center gap-3" style={{ marginTop: 28 }}>
@@ -55,11 +55,10 @@ export function HeroSection() {
 
       {/* Hero panel — full-width problems list */}
       <div
-        className={`landing-fade-in ${visible ? "is-visible" : ""}`}
-        style={{ 
-          marginTop: 56, 
-          transitionDelay: "200ms", 
-          position: "relative", 
+        className={`landing-fade-in mt-10 md:mt-14 ${visible ? "is-visible" : ""}`}
+        style={{
+          transitionDelay: "200ms",
+          position: "relative",
           zIndex: 1,
           width: "100%"
         }}

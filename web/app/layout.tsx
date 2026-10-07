@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta-sans",
+  subsets: ["latin"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,24 +19,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "PREP-G | Master System Design",
-    template: "%s | PREP-G",
+    default: "PREP | Master System Design",
+    template: "%s | PREP",
   },
   description: "Master system design patterns and ace your technical interview. Practice canonical system design problems with instant AI-powered feedback.",
   keywords: ["System Design", "Interview Prep", "Software Engineering", "FAANG", "LLD", "HLD", "Architecture"],
-  authors: [{ name: "PREP-G Team" }],
-  creator: "PREP-G",
+  authors: [{ name: "PREP Team" }],
+  creator: "PREP",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://prepg.com",
-    title: "PREP-G | Master System Design",
+    title: "PREP | Master System Design",
     description: "Master system design patterns and ace your technical interview with instant AI feedback.",
-    siteName: "PREP-G",
+    siteName: "PREP",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PREP-G | Master System Design",
+    title: "PREP | Master System Design",
     description: "Master system design patterns and ace your technical interview with instant AI feedback.",
   },
   icons: {
@@ -46,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#0a0a0a] text-white selection:bg-white/20 font-sans">
         <PostHogProvider>

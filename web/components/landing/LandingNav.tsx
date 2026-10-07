@@ -9,7 +9,7 @@ export function LandingNav() {
   const router = useRouter();
 
   return (
-    <nav className="landing-nav">
+    <nav className="flex items-center justify-between w-full max-w-[1280px] mx-auto px-6 py-6 md:px-10 relative z-10">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2.5 no-underline">
         <svg
@@ -27,13 +27,13 @@ export function LandingNav() {
           <circle cx="12" cy="13" r="2.5" fill="currentColor" />
         </svg>
         <span className="font-semibold tracking-widest text-sm text-[var(--landing-text-primary)]">
-          PREP-G
+          PREP
         </span>
       </Link>
 
       {/* Right side */}
       <div 
-        className="flex items-center gap-6 px-5 py-2.5" 
+        className="flex items-center gap-3 md:gap-6 px-3 md:px-5 py-2 md:py-2.5" 
         style={{
           border: "1px solid rgba(255, 255, 255, 0.06)",
           fontFamily: "var(--landing-font-mono)",

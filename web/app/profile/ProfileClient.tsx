@@ -318,10 +318,6 @@ function LeftSidebar({ session, stats }: { session: any, stats: Stats }) {
             <p className="text-sm text-white/40">{session.user.email}</p>
           </div>
         </div>
-        
-        <button className="w-full mt-5 py-1.5 bg-[#2a2a2a] hover:bg-[#333] text-emerald-500 font-medium text-sm rounded transition-colors border border-emerald-500/10">
-          Edit Profile
-        </button>
 
         <div className="mt-6 space-y-4 pt-6 border-t border-[#2a2a2a]">
            <h3 className="text-white/80 font-medium text-sm mb-3">Community Stats</h3>
