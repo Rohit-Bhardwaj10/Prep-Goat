@@ -282,7 +282,7 @@ export class HLDEvaluator implements Evaluator {
         },
         { role: 'user', content: prompt },
       ],
-      model: 'llama3-70b-8192',
+      model: 'openai/gpt-oss-120b',
       response_format: { type: 'json_object' },
       temperature: 0.0, // Zero temperature — we want deterministic fact extraction
     });
