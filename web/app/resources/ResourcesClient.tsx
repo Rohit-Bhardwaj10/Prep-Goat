@@ -178,7 +178,7 @@ export default function ResourcesClient() {
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-bold tracking-widest text-base text-white">PREP-G</span>
+          <span className="font-bold tracking-widest text-base text-white">PREP</span>
         </Link>
 
         <nav className="hidden md:flex items-center bg-[#1a1a1a]/80 backdrop-blur-md border border-white/5 p-1 text-[13px] font-medium text-white/70">
@@ -342,7 +342,7 @@ export default function ResourcesClient() {
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer className="border-t border-white/5 py-8">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between text-[11px] font-mono text-white/20 uppercase tracking-widest">
-          <span>Prep-G</span>
+          <span>PREP</span>
           <span>Study hard.</span>
         </div>
       </footer>

@@ -33,7 +33,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
               <path d="M12 2L22 19H2L12 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="2.5" fill="currentColor" />
             </svg>
-            <span className="font-bold tracking-widest text-[12px] text-white">PREP-G</span>
+            <span className="font-bold tracking-widest text-[12px] text-white">PREP</span>
           </Link>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function CheatsheetViewClient({ resource }: { resource: ResourceD
             </h1>
 
             <p className="text-white/40 text-sm leading-relaxed max-w-lg">
-              A short guide from the Prep-G study notes — written to explain this concept simply and stick with you.
+              A short guide from the PREPstudy notes — written to explain this concept simply and stick with you.
             </p>
           </header>
 

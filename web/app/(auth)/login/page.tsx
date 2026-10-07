@@ -54,7 +54,7 @@ export default function LoginPage() {
                 <circle cx="12" cy="13" r="2.5" fill="currentColor" />
               </svg>
             </div>
-            <span className="font-bold tracking-widest text-base">PREP-G</span>
+            <span className="font-bold tracking-widest text-base">PREP</span>
           </Link>
         </div>
 
