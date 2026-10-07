@@ -240,7 +240,7 @@ export class LLMEvaluator implements Evaluator {
         },
         { role: 'user', content: prompt },
       ],
-      model: 'openai/gpt-oss-120b',
+      model: 'llama3-70b-8192',
       response_format: { type: 'json_object' },
       temperature: 0.0, // Zero temperature — deterministic fact extraction
     });
