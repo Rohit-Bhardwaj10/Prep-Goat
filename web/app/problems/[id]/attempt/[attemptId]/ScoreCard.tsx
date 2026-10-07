@@ -50,12 +50,15 @@ function scoreBg(score: number) {
 // Flatten all criteria across all stages into radar data points
 function buildRadarData(evaluation: EvaluationResult[]) {
   return evaluation.flatMap((stage) =>
-    stage.feedback.map((fb) => ({
-      criterion: fb.criterion.length > 22 ? fb.criterion.slice(0, 20) + '…' : fb.criterion,
-      fullCriterion: fb.criterion,
-      score: fb.score,
-      stage: STAGE_LABELS[stage.stageType] ?? stage.stageType,
-    }))
+    stage.feedback.map((fb) => {
+      const crit = fb.criterion || 'Unknown';
+      return {
+        criterion: crit.length > 22 ? crit.slice(0, 20) + '…' : crit,
+        fullCriterion: crit,
+        score: fb.score,
+        stage: STAGE_LABELS[stage.stageType] ?? stage.stageType,
+      };
+    })
   );
 }
 
@@ -115,7 +118,7 @@ function StageSection({ result }: { result: EvaluationResult }) {
                 <span className={`font-mono text-xs font-bold px-1.5 py-0.5 rounded border ${scoreBg(fb.score)} ${scoreColor(fb.score)}`}>
                   {fb.score}/5
                 </span>
-                <span className="text-sm font-semibold text-white/85">{fb.criterion}</span>
+                <span className="text-sm font-semibold text-white/85">{fb.criterion || 'Unknown'}</span>
               </div>
               {fb.evidence && (
                 <div className="my-2 pl-3 border-l border-white/10 text-xs font-mono text-white/50 bg-white/[0.02] py-1 rounded-sm">
